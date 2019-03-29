@@ -35,42 +35,28 @@ func IsDui(cards []*Card) (cardType Type) {
 
 // 连对
 func IsLianDui(cards []*Card) (cardType Type) {
-	var minValue int
-	var maxValue int
 	count := cardCount(cards)
-	for i := 3; i <= 14; i++ {
-		if count[i] == 2 {
-			minValue = i
-			break
-		}
-	}
-
-	for i := 14; i >= 3; i-- {
-		if count[i] == 2 {
-			maxValue = i
-			break
-		}
-	}
+	minValue := getMinValue(count, 2)
+	maxValue := getMaxValue(count, 2)
 	valueRange := maxValue - minValue + 1
 
 	if len(cards) != valueRange*2 {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] != 2 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] != 2 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeLianDui
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeLianDui
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -191,42 +177,28 @@ func IsShunZi(cards []*Card) (cardType Type) {
 		return
 	}
 
-	var minValue int
-	var maxValue int
 	count := cardCount(cards)
-	for i := 3; i <= 14; i++ {
-		if count[i] == 1 {
-			minValue = i
-			break
-		}
-	}
-
-	for i := 14; i >= 3; i-- {
-		if count[i] == 1 {
-			maxValue = i
-			break
-		}
-	}
+	minValue := getMinValue(count, 1)
+	maxValue := getMaxValue(count, 1)
 	valueRange := maxValue - minValue + 1
 
 	if len(cards) != valueRange {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] != 1 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] != 1 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeShunZi
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeShunZi
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -237,42 +209,28 @@ func IsFeiJiBuDai(cards []*Card) (cardType Type) {
 		return
 	}
 
-	var minValue int
-	var maxValue int
 	count := cardCount(cards)
-	for i := 3; i <= 14; i++ {
-		if count[i] == 3 {
-			minValue = i
-			break
-		}
-	}
-
-	for i := 14; i >= 3; i-- {
-		if count[i] == 3 {
-			maxValue = i
-			break
-		}
-	}
+	minValue := getMinValue(count, 3)
+	maxValue := getMaxValue(count, 3)
 	valueRange := maxValue - minValue + 1
 
 	if len(cards) != valueRange*3 {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] != 3 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] != 3 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeFeiJiBuDai
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeFeiJiBuDai
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -310,20 +268,19 @@ func IsFeiJiDaiYi(cards []*Card) (cardType Type) {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] < 3 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] < 3 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeFeiJiDaiYi
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeFeiJiDaiYi
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -336,48 +293,34 @@ func IsFeiJiDaiEr(cards []*Card) (cardType Type) {
 
 	count := cardCount(cards)
 
-	var exist int
+	var times int
 	for i := 3; i <= 15; i++ {
 		if count[i] == 2 {
-			exist++
+			times++
 		}
 	}
 
-	var minValue int
-	var maxValue int
-	for i := 3; i <= 14; i++ {
-		if count[i] == 3 {
-			minValue = i
-			break
-		}
-	}
-
-	for i := 14; i >= 3; i-- {
-		if count[i] == 3 {
-			maxValue = i
-			break
-		}
-	}
+	minValue := getMinValue(count, 3)
+	maxValue := getMaxValue(count, 3)
 	valueRange := maxValue - minValue + 1
 
-	if len(cards) != valueRange*5 || exist != valueRange {
+	if len(cards) != valueRange*5 || times != valueRange {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] != 3 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] != 3 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeFeiJiDaiEr
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeFeiJiDaiEr
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -418,42 +361,28 @@ func IsLianZha(cards []*Card) (cardType Type) {
 		return
 	}
 
-	var minValue int
-	var maxValue int
 	count := cardCount(cards)
-	for i := 3; i <= 14; i++ {
-		if count[i] == 4 {
-			minValue = i
-			break
-		}
-	}
-
-	for i := 14; i >= 3; i-- {
-		if count[i] == 4 {
-			maxValue = i
-			break
-		}
-	}
+	minValue := getMinValue(count, 4)
+	maxValue := getMaxValue(count, 4)
 	valueRange := maxValue - minValue + 1
 
 	if len(cards) != valueRange*4 {
 		return
 	}
 
-	for i := minValue; i <= 14-valueRange; i++ {
-		exist := true
-		for j := i; j < i+valueRange; j++ {
-			if count[j] != 4 {
-				exist = false
-				break
-			}
+	exist := true
+	for i := minValue; i <= maxValue; i++ {
+		if count[i] != 4 {
+			exist = false
+			break
 		}
-		if exist {
-			cardType.CardType = CardTypeLianZha
-			cardType.MinValue = minValue
-			cardType.MaxValue = maxValue
-			return
-		}
+	}
+
+	if exist {
+		cardType.CardType = CardTypeLianZha
+		cardType.MinValue = minValue
+		cardType.MaxValue = maxValue
+		return
 	}
 	return
 }
@@ -465,4 +394,24 @@ func cardCount(cards []*Card) [18]int {
 		count[int(card.Num)]++
 	}
 	return count
+}
+
+// 获取最小的牌
+func getMinValue(count [18]int, repeatCount int) int {
+	for i := 3; i <= 14; i++ {
+		if count[i] == repeatCount {
+			return i
+		}
+	}
+	return 0
+}
+
+// 获取最大的牌
+func getMaxValue(count [18]int, repeatCount int) int {
+	for i := 14; i >= 3; i-- {
+		if count[i] == repeatCount {
+			return i
+		}
+	}
+	return 0
 }
