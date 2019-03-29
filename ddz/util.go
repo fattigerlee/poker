@@ -348,7 +348,8 @@ func IsHuoJian(cards []*Card) (cardType Type) {
 		return
 	}
 
-	if cards[0].Num == 16 && cards[1].Num == 17 {
+	count := cardCount(cards)
+	if count[16] == 1 && count[17] == 1 {
 		cardType.CardType = CardTypeHuoJian
 		return
 	}

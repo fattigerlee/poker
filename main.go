@@ -11,6 +11,8 @@ func main() {
 }
 
 func typeTest() {
+	isDan()
+	isHuoJian()
 	isLianDui()
 	isShunZi()
 	isFeiJiBuDai()
@@ -19,9 +21,21 @@ func typeTest() {
 	isLianZha()
 }
 
+func isDan() {
+	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+	}
+	fmt.Println(ddz.GetType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+	fmt.Println(ddz.GetType(cards))
+}
+
 func isDui() {
 	cards := []*ddz.Card{
-		ddz.NewCard(ddz.SuitTypeDiamond, 3),
+		ddz.NewCard(ddz.SuitTypeJoker, 3),
 		ddz.NewCard(ddz.SuitTypeDiamond, 4),
 	}
 	fmt.Println("对:", ddz.IsDui(cards))
@@ -31,6 +45,14 @@ func isDui() {
 		ddz.NewCard(ddz.SuitTypeDiamond, 3),
 	}
 	fmt.Println("对:", ddz.IsDui(cards))
+}
+
+func isHuoJian() {
+	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+	}
+	fmt.Println(ddz.GetType(cards))
 }
 
 func isLianDui() {
@@ -177,14 +199,6 @@ func isZhaDan() {
 	fmt.Println("炸弹:", ddz.IsZhaDan(cards))
 }
 
-func isHuoJian() {
-	cards := []*ddz.Card{
-		ddz.NewCard(ddz.SuitTypeJoker, 16),
-		ddz.NewCard(ddz.SuitTypeJoker, 17),
-	}
-	fmt.Println("火箭:", ddz.IsHuoJian(cards))
-}
-
 func isLianZha() {
 	cards := []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
@@ -203,6 +217,9 @@ func findTest() {
 	findDan()
 	findDui()
 	findLianDui()
+	findShunZi()
+	findFeiJiBuDai()
+	findFeiJiDaiYi()
 }
 
 func findDan() {
@@ -273,6 +290,75 @@ func findLianDui() {
 		CardType: ddz.CardTypeLianDui,
 		MinValue: 3,
 		MaxValue: 5,
+	}
+
+	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+}
+
+func findShunZi() {
+	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 4),
+		ddz.NewCard(ddz.SuitTypeClub, 5),
+		ddz.NewCard(ddz.SuitTypeSpade, 7),
+		ddz.NewCard(ddz.SuitTypeHeart, 6),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+	}
+
+	cardType := ddz.Type{
+		CardType: ddz.CardTypeShunZi,
+		MinValue: 3,
+		MaxValue: 13,
+	}
+
+	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+}
+
+func findFeiJiBuDai() {
+	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+	}
+
+	cardType := ddz.Type{
+		CardType: ddz.CardTypeFeiJiBuDai,
+		MinValue: 12,
+		MaxValue: 13,
+	}
+
+	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+}
+
+func findFeiJiDaiYi() {
+	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeDiamond, 13),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+	}
+
+	cardType := ddz.Type{
+		CardType: ddz.CardTypeFeiJiDaiYi,
+		MinValue: 12,
+		MaxValue: 13,
 	}
 
 	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
