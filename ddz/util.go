@@ -7,7 +7,7 @@ type Type struct {
 }
 
 // 单
-func IsDan(cards []*Card) (cardType Type) {
+func isDan(cards []*Card) (cardType Type) {
 	if len(cards) != 1 {
 		return
 	}
@@ -18,7 +18,7 @@ func IsDan(cards []*Card) (cardType Type) {
 }
 
 // 对
-func IsDui(cards []*Card) (cardType Type) {
+func isDui(cards []*Card) (cardType Type) {
 	if len(cards) != 2 {
 		return
 	}
@@ -34,7 +34,7 @@ func IsDui(cards []*Card) (cardType Type) {
 }
 
 // 连对
-func IsLianDui(cards []*Card) (cardType Type) {
+func isLianDui(cards []*Card) (cardType Type) {
 	count := cardCount(cards)
 	minValue := getMinValue(count, 2)
 	maxValue := getMaxValue(count, 2)
@@ -62,7 +62,7 @@ func IsLianDui(cards []*Card) (cardType Type) {
 }
 
 // 三不带
-func IsSanBuDai(cards []*Card) (cardType Type) {
+func isSanBuDai(cards []*Card) (cardType Type) {
 	if len(cards) != 3 {
 		return
 	}
@@ -79,7 +79,7 @@ func IsSanBuDai(cards []*Card) (cardType Type) {
 }
 
 // 三带一
-func IsSanDaiYi(cards []*Card) (cardType Type) {
+func isSanDaiYi(cards []*Card) (cardType Type) {
 	if len(cards) != 4 {
 		return
 	}
@@ -96,7 +96,7 @@ func IsSanDaiYi(cards []*Card) (cardType Type) {
 }
 
 // 三带二
-func IsSanDaiEr(cards []*Card) (cardType Type) {
+func isSanDaiEr(cards []*Card) (cardType Type) {
 	if len(cards) != 5 {
 		return
 	}
@@ -126,7 +126,7 @@ func IsSanDaiEr(cards []*Card) (cardType Type) {
 }
 
 // 四带单(炸弹带两张单)
-func IsSiDaiDan(cards []*Card) (cardType Type) {
+func isSiDaiDan(cards []*Card) (cardType Type) {
 	if len(cards) != 6 {
 		return
 	}
@@ -143,7 +143,7 @@ func IsSiDaiDan(cards []*Card) (cardType Type) {
 }
 
 // 四带对(炸弹带两对)
-func IsSiDaiDui(cards []*Card) (cardType Type) {
+func isSiDaiDui(cards []*Card) (cardType Type) {
 	if len(cards) != 8 {
 		return
 	}
@@ -172,7 +172,7 @@ func IsSiDaiDui(cards []*Card) (cardType Type) {
 }
 
 // 顺子
-func IsShunZi(cards []*Card) (cardType Type) {
+func isShunZi(cards []*Card) (cardType Type) {
 	if len(cards) < 5 {
 		return
 	}
@@ -204,7 +204,7 @@ func IsShunZi(cards []*Card) (cardType Type) {
 }
 
 // 飞机不带
-func IsFeiJiBuDai(cards []*Card) (cardType Type) {
+func isFeiJiBuDai(cards []*Card) (cardType Type) {
 	if len(cards) < 6 {
 		return
 	}
@@ -236,13 +236,13 @@ func IsFeiJiBuDai(cards []*Card) (cardType Type) {
 }
 
 // 飞机带一
-func IsFeiJiDaiYi(cards []*Card) (cardType Type) {
+func isFeiJiDaiYi(cards []*Card) (cardType Type) {
 	if len(cards) < 8 {
 		return
 	}
 
 	// 连炸不是飞机带一
-	if IsLianZha(cards).CardType != CardTypeNone {
+	if isLianZha(cards).CardType != CardTypeNone {
 		return
 	}
 
@@ -286,7 +286,7 @@ func IsFeiJiDaiYi(cards []*Card) (cardType Type) {
 }
 
 // 飞机带二
-func IsFeiJiDaiEr(cards []*Card) (cardType Type) {
+func isFeiJiDaiEr(cards []*Card) (cardType Type) {
 	if len(cards) < 10 {
 		return
 	}
@@ -326,7 +326,7 @@ func IsFeiJiDaiEr(cards []*Card) (cardType Type) {
 }
 
 // 炸弹
-func IsZhaDan(cards []*Card) (cardType Type) {
+func isZhaDan(cards []*Card) (cardType Type) {
 	if len(cards) != 4 {
 		return
 	}
@@ -343,7 +343,7 @@ func IsZhaDan(cards []*Card) (cardType Type) {
 }
 
 // 火箭
-func IsHuoJian(cards []*Card) (cardType Type) {
+func isHuoJian(cards []*Card) (cardType Type) {
 	if len(cards) != 2 {
 		return
 	}
@@ -357,7 +357,7 @@ func IsHuoJian(cards []*Card) (cardType Type) {
 }
 
 // 连炸
-func IsLianZha(cards []*Card) (cardType Type) {
+func isLianZha(cards []*Card) (cardType Type) {
 	if len(cards) < 8 {
 		return
 	}

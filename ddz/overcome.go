@@ -1,7 +1,7 @@
 package ddz
 
 // 扑克牌列表中是否有比牌型更大的牌
-func IsOvercomeCardType(cardType Type, cards []*Card) bool {
+func HasOvercomeCard(cardType Type, cards []*Card) bool {
 	count := cardCount(cards)
 
 	if cardType.CardType >= CardTypeDan && cardType.CardType < CardTypeZhaDan {
