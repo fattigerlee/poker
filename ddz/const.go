@@ -114,3 +114,35 @@ func (c CardType) String() string {
 		return "牌型错误"
 	}
 }
+
+// 底牌牌型
+type BottomCardType int
+
+const (
+	BottomCardTypeNone        BottomCardType = iota
+	BottomCardTypeWangZha                    // 王炸
+	BottomCardTypeDanWang                    // 单王
+	BottomCardTypeTongHuaShun                // 同花顺
+	BottomCardTypeTongHua                    // 同花
+	BottomCardTypeShunZi                     // 顺子
+	BottomCardTypeSanBuDai                   // 三不带
+)
+
+func (c BottomCardType) String() string {
+	switch c {
+	case BottomCardTypeWangZha:
+		return "王炸"
+	case BottomCardTypeDanWang:
+		return "单王"
+	case BottomCardTypeTongHuaShun:
+		return "同花顺"
+	case BottomCardTypeTongHua:
+		return "同花"
+	case BottomCardTypeShunZi:
+		return "顺子"
+	case BottomCardTypeSanBuDai:
+		return "三不带"
+	default:
+		return "底牌牌型错误"
+	}
+}

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/fattigerlee/Poker/ddz"
+	"github.com/fattigerlee/poker/ddz"
 )
 
 func main() {
