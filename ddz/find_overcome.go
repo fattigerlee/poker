@@ -44,6 +44,8 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 		}
 	case CardTypeHuoJian:
 		return findBigHuoJian(cards, count, cardType)
+	case CardTypeLianZha:
+		return findBigLianZha(cards, count, cardType)
 	}
 
 	if cardType.CardType >= CardTypeDan && cardType.CardType < CardTypeZhaDan {
@@ -439,6 +441,35 @@ func findBigHuoJian(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 					return
 				}
 			}
+		}
+	}
+	return
+}
+
+func findBigLianZha(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
+	valueRange := cardType.MaxValue - cardType.MinValue + 1
+
+	for i := cardType.MinValue + 1; i <= 14; i++ {
+		exist := true
+		for j := i; j < i+valueRange; j++ {
+			if count[j] < 4 {
+				exist = false
+				break
+			}
+		}
+
+		if exist {
+			for j := i; j < i+valueRange; j++ {
+				for k := 0; k < len(cards); k++ {
+					if int(cards[k].Num) == j {
+						for m := 0; m < 4; m++ {
+							ret = append(ret, cards[k+m])
+						}
+						break
+					}
+				}
+			}
+			return
 		}
 	}
 	return
