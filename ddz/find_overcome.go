@@ -62,6 +62,10 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 		if ret = findHuoJian(cards, count); len(ret) != 0 {
 			return
 		}
+
+		if ret = findLianZha(cards, count); len(ret) != 0 {
+			return
+		}
 	case CardTypeHuoJian:
 		if ret = findBigHuoJian(cards, count, cardType); len(ret) != 0 {
 			return
@@ -108,6 +112,22 @@ func findHuoJian(cards []*Card, count [18]int) (ret []*Card) {
 			}
 		}
 		return
+	}
+	return
+}
+
+func findLianZha(cards []*Card, count [18]int) (ret []*Card) {
+	for i := 3; i <= 13; i++ {
+		if count[i] == 4 && count[i+1] == 4 {
+			for j := 0; j < len(cards); j++ {
+				if int(cards[j].Num) == i {
+					for k := 0; k < 8; k++ {
+						ret = append(ret, cards[j+k])
+					}
+					return
+				}
+			}
+		}
 	}
 	return
 }

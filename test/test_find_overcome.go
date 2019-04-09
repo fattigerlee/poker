@@ -329,9 +329,9 @@ func findLianZha() {
 	}
 
 	cardType := ddz.Type{
-		CardType: ddz.CardTypeLianZha,
-		MinValue: 3,
-		MaxValue: 5,
+		CardType: ddz.CardTypeZhaDan,
+		MinValue: 12,
+		MaxValue: 0,
 	}
 
 	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
