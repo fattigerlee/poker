@@ -15,25 +15,45 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 
 	switch cardType.CardType {
 	case CardTypeDan:
-		return findBigDan(cards, count, cardType)
+		if ret = findBigDan(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeDui:
-		return findBigDui(cards, count, cardType)
+		if ret = findBigDui(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeLianDui:
-		return findBigLianDui(cards, count, cardType)
+		if ret = findBigLianDui(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeSanBuDai:
-		return findBigSanBuDai(cards, count, cardType)
+		if ret = findBigSanBuDai(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeSanDaiYi:
-		return findBigSanDaiYi(cards, count, cardType)
+		if ret = findBigSanDaiYi(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeSanDaiEr:
-		return findBigSanDaiEr(cards, count, cardType)
+		if ret = findBigSanDaiEr(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeShunZi:
-		return findBigShunZi(cards, count, cardType)
+		if ret = findBigShunZi(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeFeiJiBuDai:
-		return findBigFeiJiBuDai(cards, count, cardType)
+		if ret = findBigFeiJiBuDai(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeFeiJiDaiYi:
-		return findBigFeiJiDaiYi(cards, count, cardType)
+		if ret = findBigFeiJiDaiYi(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeFeiJiDaiEr:
-		return findBigFeiJiDaiEr(cards, count, cardType)
+		if ret = findBigFeiJiDaiEr(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeZhaDan:
 		if ret = findBigZhaDan(cards, count, cardType); len(ret) != 0 {
 			return
@@ -43,9 +63,13 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 			return
 		}
 	case CardTypeHuoJian:
-		return findBigHuoJian(cards, count, cardType)
+		if ret = findBigHuoJian(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	case CardTypeLianZha:
-		return findBigLianZha(cards, count, cardType)
+		if ret = findBigLianZha(cards, count, cardType); len(ret) != 0 {
+			return
+		}
 	}
 
 	if cardType.CardType >= CardTypeDan && cardType.CardType < CardTypeZhaDan {

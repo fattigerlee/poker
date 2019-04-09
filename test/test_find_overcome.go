@@ -39,7 +39,7 @@ func findDan() {
 
 	cardType := ddz.Type{
 		CardType: ddz.CardTypeDan,
-		MinValue: 6,
+		MinValue: 15,
 	}
 
 	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
