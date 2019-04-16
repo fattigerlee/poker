@@ -112,16 +112,23 @@ func findSanBuDai() {
 
 func findSanDaiYi() {
 	cards := []*ddz.Card{
-		ddz.NewCard(ddz.SuitTypeHeart, 3),
-		ddz.NewCard(ddz.SuitTypeSpade, 3),
-		ddz.NewCard(ddz.SuitTypeClub, 7),
-		ddz.NewCard(ddz.SuitTypeSpade, 7),
-		ddz.NewCard(ddz.SuitTypeHeart, 6),
-		ddz.NewCard(ddz.SuitTypeSpade, 6),
-		ddz.NewCard(ddz.SuitTypeClub, 6),
-		ddz.NewCard(ddz.SuitTypeSpade, 4),
-		ddz.NewCard(ddz.SuitTypeHeart, 5),
-		ddz.NewCard(ddz.SuitTypeSpade, 5),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+		ddz.NewCard(ddz.SuitTypeDiamond, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeDiamond, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
 	}
 
 	cardType := ddz.Type{

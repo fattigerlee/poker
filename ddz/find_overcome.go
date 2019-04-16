@@ -219,7 +219,11 @@ func findBigSanDaiYi(cards []*Card, count [18]int, cardType Type) (ret []*Card) 
 				}
 			}
 
-			for j := 3; j != i && j <= 15; j++ {
+			for j := 3; j <= 17; j++ {
+				if j == i {
+					continue
+				}
+
 				if count[j] > 0 {
 					for k := 0; k < len(cards); k++ {
 						if int(cards[k].Num) == j {
@@ -246,7 +250,11 @@ func findBigSanDaiEr(cards []*Card, count [18]int, cardType Type) (ret []*Card) 
 				}
 			}
 
-			for j := 3; j != i && j <= 15; j++ {
+			for j := 3; j <= 15; j++ {
+				if j == i {
+					continue
+				}
+
 				if count[j] > 1 {
 					for k := 0; k < len(cards); k++ {
 						if int(cards[k].Num) == j {
