@@ -37,12 +37,12 @@ func findDan() {
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDan,
 		MinValue: 15,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findDui() {
@@ -61,12 +61,12 @@ func findDui() {
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDui,
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findLianDui() {
@@ -85,13 +85,13 @@ func findLianDui() {
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeLianDui,
 		MinValue: 3,
 		MaxValue: 5,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanBuDai() {
@@ -102,12 +102,12 @@ func findSanBuDai() {
 		ddz.NewCard(ddz.SuitTypeSpade, 4),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSanBuDai,
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanDaiYi() {
@@ -131,12 +131,12 @@ func findSanDaiYi() {
 		ddz.NewCard(ddz.SuitTypeClub, 9),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSanDaiYi,
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanDaiEr() {
@@ -155,12 +155,12 @@ func findSanDaiEr() {
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSanDaiEr,
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findShunZi() {
@@ -179,13 +179,13 @@ func findShunZi() {
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeShunZi,
 		MinValue: 3,
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiBuDai() {
@@ -202,13 +202,13 @@ func findFeiJiBuDai() {
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeFeiJiBuDai,
 		MinValue: 12,
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiDaiYi() {
@@ -223,13 +223,13 @@ func findFeiJiDaiYi() {
 		ddz.NewCard(ddz.SuitTypeSpade, 10),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeFeiJiDaiYi,
 		MinValue: 12,
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiDaiEr() {
@@ -248,13 +248,13 @@ func findFeiJiDaiEr() {
 		ddz.NewCard(ddz.SuitTypeClub, 15),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeFeiJiDaiEr,
 		MinValue: 12,
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findZhaDan() {
@@ -273,21 +273,21 @@ func findZhaDan() {
 		ddz.NewCard(ddz.SuitTypeJoker, 17),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeZhaDan,
 		MinValue: 12,
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 
-	cardType = ddz.Type{
+	info = ddz.CardTypeInfo{
 		CardType: ddz.CardTypeZhaDan,
 		MinValue: 14,
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findHuoJian() {
@@ -306,13 +306,13 @@ func findHuoJian() {
 		ddz.NewCard(ddz.SuitTypeClub, 11),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeHuoJian,
 		MinValue: 0,
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }
 
 func findLianZha() {
@@ -335,11 +335,11 @@ func findLianZha() {
 		ddz.NewCard(ddz.SuitTypeDiamond, 10),
 	}
 
-	cardType := ddz.Type{
+	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeZhaDan,
 		MinValue: 12,
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(cardType, cards))
+	fmt.Println(ddz.FindOvercomeCard(info, cards))
 }

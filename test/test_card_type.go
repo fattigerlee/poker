@@ -27,12 +27,12 @@ func isDan() {
 	cards := []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeJoker, 16),
 	}
-	fmt.Println("单:", ddz.GetType(cards))
+	fmt.Println("单:", ddz.GetCardType(cards))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeJoker, 17),
 	}
-	fmt.Println("单:", ddz.GetType(cards))
+	fmt.Println("单:", ddz.GetCardType(cards))
 }
 
 func isDui() {
@@ -40,13 +40,13 @@ func isDui() {
 		ddz.NewCard(ddz.SuitTypeJoker, 3),
 		ddz.NewCard(ddz.SuitTypeDiamond, 4),
 	}
-	fmt.Println("对:", ddz.GetType(cards))
+	fmt.Println("对:", ddz.GetCardType(cards))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeSpade, 3),
 		ddz.NewCard(ddz.SuitTypeDiamond, 3),
 	}
-	fmt.Println("对:", ddz.GetType(cards))
+	fmt.Println("对:", ddz.GetCardType(cards))
 }
 
 func isLianDui() {
@@ -58,7 +58,7 @@ func isLianDui() {
 		ddz.NewCard(ddz.SuitTypeDiamond, 5),
 		ddz.NewCard(ddz.SuitTypeClub, 5),
 	}
-	fmt.Println("连对:", ddz.GetType(cards))
+	fmt.Println("连对:", ddz.GetCardType(cards))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeDiamond, 12),
@@ -68,7 +68,7 @@ func isLianDui() {
 		ddz.NewCard(ddz.SuitTypeDiamond, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
 	}
-	fmt.Println("连对:", ddz.GetType(cards))
+	fmt.Println("连对:", ddz.GetCardType(cards))
 }
 
 func isSanBuDai() {
@@ -77,7 +77,7 @@ func isSanBuDai() {
 		ddz.NewCard(ddz.SuitTypeSpade, 3),
 		ddz.NewCard(ddz.SuitTypeClub, 3),
 	}
-	fmt.Println("三不带:", ddz.GetType(cards))
+	fmt.Println("三不带:", ddz.GetCardType(cards))
 }
 
 func isSanDaiYi() {
@@ -87,7 +87,7 @@ func isSanDaiYi() {
 		ddz.NewCard(ddz.SuitTypeClub, 3),
 		ddz.NewCard(ddz.SuitTypeClub, 5),
 	}
-	fmt.Println("三带一:", ddz.GetType(cards))
+	fmt.Println("三带一:", ddz.GetCardType(cards))
 }
 
 func isSanDaiEr() {
@@ -98,7 +98,7 @@ func isSanDaiEr() {
 		ddz.NewCard(ddz.SuitTypeClub, 5),
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
-	fmt.Println("三带二:", ddz.GetType(cards))
+	fmt.Println("三带二:", ddz.GetCardType(cards))
 }
 
 func isSiDaiDan() {
@@ -110,7 +110,7 @@ func isSiDaiDan() {
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 		ddz.NewCard(ddz.SuitTypeSpade, 6),
 	}
-	fmt.Println("四带单:", ddz.GetType(cards))
+	fmt.Println("四带单:", ddz.GetCardType(cards))
 }
 
 func isSiDaiDui() {
@@ -124,7 +124,7 @@ func isSiDaiDui() {
 		ddz.NewCard(ddz.SuitTypeSpade, 7),
 		ddz.NewCard(ddz.SuitTypeHeart, 7),
 	}
-	fmt.Println("四带对:", ddz.GetType(cards))
+	fmt.Println("四带对:", ddz.GetCardType(cards))
 }
 
 func isShunZi() {
@@ -135,7 +135,7 @@ func isShunZi() {
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 	}
-	fmt.Println("顺子:", ddz.GetType(cards))
+	fmt.Println("顺子:", ddz.GetCardType(cards))
 }
 
 func isFeiJiBuDai() {
@@ -150,7 +150,7 @@ func isFeiJiBuDai() {
 		ddz.NewCard(ddz.SuitTypeClub, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 	}
-	fmt.Println("飞机不带:", ddz.GetType(cards))
+	fmt.Println("飞机不带:", ddz.GetCardType(cards))
 }
 
 func isFeiJiDaiYi() {
@@ -164,7 +164,7 @@ func isFeiJiDaiYi() {
 		ddz.NewCard(ddz.SuitTypeClub, 13),
 		ddz.NewCard(ddz.SuitTypeHeart, 5),
 	}
-	fmt.Println("飞机带一:", ddz.GetType(cards))
+	fmt.Println("飞机带一:", ddz.GetCardType(cards))
 }
 
 func isFeiJiDaiEr() {
@@ -180,7 +180,7 @@ func isFeiJiDaiEr() {
 		ddz.NewCard(ddz.SuitTypeClub, 6),
 		ddz.NewCard(ddz.SuitTypeSpade, 6),
 	}
-	fmt.Println("飞机带二:", ddz.GetType(cards))
+	fmt.Println("飞机带二:", ddz.GetCardType(cards))
 }
 
 func isZhaDan() {
@@ -190,7 +190,7 @@ func isZhaDan() {
 		ddz.NewCard(ddz.SuitTypeClub, 5),
 		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
-	fmt.Println("炸弹:", ddz.GetType(cards))
+	fmt.Println("炸弹:", ddz.GetCardType(cards))
 }
 
 func isLianZha() {
@@ -204,7 +204,7 @@ func isLianZha() {
 		ddz.NewCard(ddz.SuitTypeClub, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 	}
-	fmt.Println("连炸:", ddz.GetType(cards))
+	fmt.Println("连炸:", ddz.GetCardType(cards))
 }
 
 func isHuoJian() {
@@ -212,5 +212,5 @@ func isHuoJian() {
 		ddz.NewCard(ddz.SuitTypeJoker, 17),
 		ddz.NewCard(ddz.SuitTypeJoker, 16),
 	}
-	fmt.Println("火箭:", ddz.GetType(cards))
+	fmt.Println("火箭:", ddz.GetCardType(cards))
 }

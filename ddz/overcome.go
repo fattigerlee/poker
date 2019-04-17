@@ -1,66 +1,66 @@
 package ddz
 
 // 扑克牌列表中是否有比牌型更大的牌
-func HasOvercomeCard(cardType Type, cards []*Card) bool {
+func OvercomeCard(info CardTypeInfo, cards []*Card) bool {
 	count := cardCount(cards)
 
-	if cardType.CardType >= CardTypeDan && cardType.CardType < CardTypeZhaDan {
+	if info.CardType >= CardTypeDan && info.CardType < CardTypeZhaDan {
 		// 炸弹
-		if hasZhaDan(count) {
+		if existZhaDan(count) {
 			return true
 		}
 
 		// 火箭
-		if hasHuoJian(count) {
+		if existHuoJian(count) {
 			return true
 		}
 	}
 
-	switch cardType.CardType {
+	switch info.CardType {
 	case CardTypeDan:
 		// 单
-		return overcomeDan(count, cardType)
+		return overcomeDan(count, info)
 	case CardTypeDui:
 		// 对
-		return overcomeDui(cards, count, cardType)
+		return overcomeDui(cards, count, info)
 	case CardTypeLianDui:
 		// 连对
-		return overcomeLianDui(cards, count, cardType)
+		return overcomeLianDui(cards, count, info)
 	case CardTypeSanBuDai:
 		// 三不带
-		return overcomeSanBuDai(cards, count, cardType)
+		return overcomeSanBuDai(cards, count, info)
 	case CardTypeSanDaiYi:
 		// 三带一
-		return overcomeSanDaiYi(cards, count, cardType)
+		return overcomeSanDaiYi(cards, count, info)
 	case CardTypeSanDaiEr:
 		// 三带二
-		return overcomeSanDaiEr(cards, count, cardType)
+		return overcomeSanDaiEr(cards, count, info)
 	case CardTypeShunZi:
 		// 顺子
-		return overcomeShunZi(cards, count, cardType)
+		return overcomeShunZi(cards, count, info)
 	case CardTypeFeiJiBuDai:
 		// 飞机不带
-		return overcomeFeiJiBuDai(cards, count, cardType)
+		return overcomeFeiJiBuDai(cards, count, info)
 	case CardTypeFeiJiDaiYi:
 		// 飞机带一
-		return overcomeFeiJiDaiYi(cards, count, cardType)
+		return overcomeFeiJiDaiYi(cards, count, info)
 	case CardTypeFeiJiDaiEr:
 		// 飞机带二
-		return overcomeFeiJiDaiEr(cards, count, cardType)
+		return overcomeFeiJiDaiEr(cards, count, info)
 	case CardTypeZhaDan:
 		// 炸弹
-		return overcomeZhaDan(cards, count, cardType)
+		return overcomeZhaDan(cards, count, info)
 	case CardTypeHuoJian:
 		// 火箭
 		return overcomeHuoJian(cards, count)
 	case CardTypeLianZha:
 		// 连炸
-		return overcomeLianZha(cards, count, cardType)
+		return overcomeLianZha(cards, count, info)
 	}
 	return false
 }
 
-func hasZhaDan(count [18]int) bool {
+func existZhaDan(count [18]int) bool {
 	for i := 3; i <= 15; i++ {
 		if count[i] == 4 {
 			return true
@@ -69,15 +69,15 @@ func hasZhaDan(count [18]int) bool {
 	return false
 }
 
-func hasHuoJian(count [18]int) bool {
+func existHuoJian(count [18]int) bool {
 	if count[16] == 1 && count[17] == 1 {
 		return true
 	}
 	return false
 }
 
-func overcomeDan(count [18]int, cardType Type) bool {
-	for i := cardType.MinValue + 1; i <= 17; i++ {
+func overcomeDan(count [18]int, info CardTypeInfo) bool {
+	for i := info.MinValue + 1; i <= 17; i++ {
 		if count[i] >= 1 {
 			return true
 		}
@@ -85,12 +85,12 @@ func overcomeDan(count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeDui(cards []*Card, count [18]int, cardType Type) bool {
+func overcomeDui(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	if len(cards) < 2 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 2 {
 			return true
 		}
@@ -98,14 +98,14 @@ func overcomeDui(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeLianDui(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeLianDui(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange*2 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 2 {
@@ -120,12 +120,12 @@ func overcomeLianDui(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeSanBuDai(cards []*Card, count [18]int, cardType Type) bool {
+func overcomeSanBuDai(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	if len(cards) < 3 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			return true
 		}
@@ -133,12 +133,12 @@ func overcomeSanBuDai(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeSanDaiYi(cards []*Card, count [18]int, cardType Type) bool {
+func overcomeSanDaiYi(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	if len(cards) < 4 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			return true
 		}
@@ -146,12 +146,12 @@ func overcomeSanDaiYi(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeSanDaiEr(cards []*Card, count [18]int, cardType Type) bool {
+func overcomeSanDaiEr(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	if len(cards) < 5 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			return true
 		}
@@ -159,14 +159,14 @@ func overcomeSanDaiEr(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeShunZi(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeShunZi(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 1 {
@@ -181,14 +181,14 @@ func overcomeShunZi(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeFeiJiBuDai(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeFeiJiBuDai(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange*3 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -203,14 +203,14 @@ func overcomeFeiJiBuDai(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeFeiJiDaiYi(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeFeiJiDaiYi(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange*4 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -225,14 +225,14 @@ func overcomeFeiJiDaiYi(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeFeiJiDaiEr(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeFeiJiDaiEr(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange*5 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -247,8 +247,8 @@ func overcomeFeiJiDaiEr(cards []*Card, count [18]int, cardType Type) bool {
 	return false
 }
 
-func overcomeZhaDan(cards []*Card, count [18]int, cardType Type) bool {
-	if hasHuoJian(count) {
+func overcomeZhaDan(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	if existHuoJian(count) {
 		return true
 	}
 
@@ -257,7 +257,7 @@ func overcomeZhaDan(cards []*Card, count [18]int, cardType Type) bool {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] == 4 {
 			return true
 		}
@@ -290,14 +290,14 @@ func overcomeHuoJian(cards []*Card, count [18]int) bool {
 	return false
 }
 
-func overcomeLianZha(cards []*Card, count [18]int, cardType Type) bool {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func overcomeLianZha(cards []*Card, count [18]int, info CardTypeInfo) bool {
+	valueRange := info.MaxValue - info.MinValue + 1
 
 	if len(cards) < valueRange*4 {
 		return false
 	}
 
-	for i := cardType.MinValue + 1; i <= 14-valueRange; i++ {
+	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] != 4 {

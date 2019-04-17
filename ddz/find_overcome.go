@@ -5,7 +5,7 @@ import (
 )
 
 // 扑克牌列表中找出比牌型更大的牌
-func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
+func FindOvercomeCard(info CardTypeInfo, cards []*Card) (ret []*Card) {
 	// 手牌排序
 	sort.Slice(cards, func(i, j int) bool {
 		return cards[i].Num < cards[j].Num
@@ -13,49 +13,49 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 
 	count := cardCount(cards)
 
-	switch cardType.CardType {
+	switch info.CardType {
 	case CardTypeDan:
-		if ret = findBigDan(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigDan(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeDui:
-		if ret = findBigDui(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigDui(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeLianDui:
-		if ret = findBigLianDui(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigLianDui(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeSanBuDai:
-		if ret = findBigSanBuDai(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigSanBuDai(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeSanDaiYi:
-		if ret = findBigSanDaiYi(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigSanDaiYi(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeSanDaiEr:
-		if ret = findBigSanDaiEr(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigSanDaiEr(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeShunZi:
-		if ret = findBigShunZi(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigShunZi(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeFeiJiBuDai:
-		if ret = findBigFeiJiBuDai(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigFeiJiBuDai(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeFeiJiDaiYi:
-		if ret = findBigFeiJiDaiYi(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigFeiJiDaiYi(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeFeiJiDaiEr:
-		if ret = findBigFeiJiDaiEr(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigFeiJiDaiEr(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeZhaDan:
-		if ret = findBigZhaDan(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigZhaDan(cards, count, info); len(ret) != 0 {
 			return
 		}
 
@@ -67,16 +67,16 @@ func FindOvercomeCard(cardType Type, cards []*Card) (ret []*Card) {
 			return
 		}
 	case CardTypeHuoJian:
-		if ret = findBigHuoJian(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigHuoJian(cards, count, info); len(ret) != 0 {
 			return
 		}
 	case CardTypeLianZha:
-		if ret = findBigLianZha(cards, count, cardType); len(ret) != 0 {
+		if ret = findBigLianZha(cards, count, info); len(ret) != 0 {
 			return
 		}
 	}
 
-	if cardType.CardType >= CardTypeDan && cardType.CardType < CardTypeZhaDan {
+	if info.CardType >= CardTypeDan && info.CardType < CardTypeZhaDan {
 		if ret = findZhaDan(cards, count); ret != nil {
 			return
 		}
@@ -132,8 +132,8 @@ func findLianZha(cards []*Card, count [18]int) (ret []*Card) {
 	return
 }
 
-func findBigDan(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 17; i++ {
+func findBigDan(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 17; i++ {
 		if count[i] >= 1 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -146,8 +146,8 @@ func findBigDan(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigDui(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+func findBigDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 2 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -162,10 +162,10 @@ func findBigDui(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigLianDui(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigLianDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 2 {
@@ -191,8 +191,8 @@ func findBigLianDui(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigSanBuDai(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+func findBigSanBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -207,8 +207,8 @@ func findBigSanBuDai(cards []*Card, count [18]int, cardType Type) (ret []*Card) 
 	return
 }
 
-func findBigSanDaiYi(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+func findBigSanDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -238,8 +238,8 @@ func findBigSanDaiYi(cards []*Card, count [18]int, cardType Type) (ret []*Card) 
 	return
 }
 
-func findBigSanDaiEr(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+func findBigSanDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -271,10 +271,10 @@ func findBigSanDaiEr(cards []*Card, count [18]int, cardType Type) (ret []*Card) 
 	return
 }
 
-func findBigShunZi(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigShunZi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 1 {
@@ -300,10 +300,10 @@ func findBigShunZi(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigFeiJiBuDai(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigFeiJiBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -329,10 +329,10 @@ func findBigFeiJiBuDai(cards []*Card, count [18]int, cardType Type) (ret []*Card
 	return
 }
 
-func findBigFeiJiDaiYi(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigFeiJiDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -405,10 +405,10 @@ func findBigFeiJiDaiYi(cards []*Card, count [18]int, cardType Type) (ret []*Card
 	return
 }
 
-func findBigFeiJiDaiEr(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigFeiJiDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 3 {
@@ -466,8 +466,8 @@ func findBigFeiJiDaiEr(cards []*Card, count [18]int, cardType Type) (ret []*Card
 	return
 }
 
-func findBigZhaDan(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	for i := cardType.MinValue + 1; i <= 15; i++ {
+func findBigZhaDan(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] == 4 {
 			for j := 0; j < len(cards); j++ {
 				if int(cards[j].Num) == i {
@@ -482,7 +482,7 @@ func findBigZhaDan(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigHuoJian(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
+func findBigHuoJian(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	for i := 3; i < 14; i++ {
 		if count[i] == 4 && count[i+1] == 4 {
 			for j := 0; j < len(cards); j++ {
@@ -498,10 +498,10 @@ func findBigHuoJian(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
 	return
 }
 
-func findBigLianZha(cards []*Card, count [18]int, cardType Type) (ret []*Card) {
-	valueRange := cardType.MaxValue - cardType.MinValue + 1
+func findBigLianZha(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	valueRange := info.MaxValue - info.MinValue + 1
 
-	for i := cardType.MinValue + 1; i <= 14; i++ {
+	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] < 4 {
