@@ -8,5 +8,5 @@ func SplitCards(cards []*Card) []*CardTypeInfo {
 // 拆顺子
 //
 func split_shun_zi() []*CardTypeInfo {
-
+	return nil
 }
