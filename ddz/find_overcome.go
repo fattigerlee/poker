@@ -1,8 +1,6 @@
 package ddz
 
-import (
-	"sort"
-)
+import "sort"
 
 // 扑克牌列表中找出比牌型更大的牌
 func FindOvercomeCard(info CardTypeInfo, cards []*Card) (ret []*Card) {

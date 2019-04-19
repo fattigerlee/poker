@@ -77,7 +77,7 @@ func existHuoJian(count [18]int) bool {
 }
 
 func overcomeDan(count [18]int, info CardTypeInfo) bool {
-	for i := info.MinValue + 1; i <= 17; i++ {
+	for i := info.MinValue + 1; i < 18; i++ {
 		if count[i] >= 1 {
 			return true
 		}
@@ -139,8 +139,16 @@ func overcomeSanDaiYi(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	}
 
 	for i := info.MinValue + 1; i <= 15; i++ {
-		if count[i] >= 3 {
-			return true
+		if count[i] == 3 {
+			for j := 3; j < 18; j++ {
+				if j == i {
+					continue
+				}
+
+				if count[j] >= 1 {
+					return true
+				}
+			}
 		}
 	}
 	return false
@@ -152,8 +160,16 @@ func overcomeSanDaiEr(cards []*Card, count [18]int, info CardTypeInfo) bool {
 	}
 
 	for i := info.MinValue + 1; i <= 15; i++ {
-		if count[i] >= 3 {
-			return true
+		if count[i] == 3 {
+			for j := 3; j < 18; j++ {
+				if j == i {
+					continue
+				}
+
+				if count[j] >= 2 {
+					return true
+				}
+			}
 		}
 	}
 	return false
