@@ -308,12 +308,6 @@ func findBigSanDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Ca
 			}
 			break
 		}
-
-		if int(cards[i].Num) == dan {
-			for k := 0; k < 1; k++ {
-				ret = append(ret, cards[i+k])
-			}
-		}
 	}
 
 	for i := 0; i < len(cards); i++ {
