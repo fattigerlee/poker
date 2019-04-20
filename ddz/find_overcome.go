@@ -121,10 +121,20 @@ func findHuoJian(cards []*Card, count [18]int) (ret []*Card) {
 	}
 
 	for i := 0; i < len(cards); i++ {
-		if int(cards[i].Num) == 16 || int(cards[i].Num) == 17 {
+		if int(cards[i].Num) == 16 {
 			for k := 0; k < 1; k++ {
 				ret = append(ret, cards[i+k])
 			}
+			break
+		}
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == 17 {
+			for k := 0; k < 1; k++ {
+				ret = append(ret, cards[i+k])
+			}
+			break
 		}
 	}
 	return
