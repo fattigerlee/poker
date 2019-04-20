@@ -125,7 +125,6 @@ func findHuoJian(cards []*Card, count [18]int) (ret []*Card) {
 			for k := 0; k < 1; k++ {
 				ret = append(ret, cards[i+k])
 			}
-			break
 		}
 	}
 	return

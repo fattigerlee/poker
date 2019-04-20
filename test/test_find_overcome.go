@@ -200,6 +200,9 @@ func findShunZi() {
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
 	}
 
 	info := ddz.CardTypeInfo{
@@ -208,7 +211,23 @@ func findShunZi() {
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("顺子:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeShunZi,
+		MinValue: 6,
+		MaxValue: 13,
+	}
+
+	fmt.Println("顺子:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeShunZi,
+		MinValue: 10,
+		MaxValue: 14,
+	}
+
+	fmt.Println("顺子:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiBuDai() {
@@ -282,14 +301,16 @@ func findFeiJiDaiEr() {
 
 func findZhaDan() {
 	cards := []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
-		ddz.NewCard(ddz.SuitTypeDiamond, 13),
 		ddz.NewCard(ddz.SuitTypeHeart, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 		ddz.NewCard(ddz.SuitTypeClub, 14),
-		ddz.NewCard(ddz.SuitTypeDiamond, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
 		ddz.NewCard(ddz.SuitTypeClub, 12),
 		ddz.NewCard(ddz.SuitTypeJoker, 16),
@@ -318,15 +339,17 @@ func findHuoJian() {
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
-		ddz.NewCard(ddz.SuitTypeDiamond, 13),
+		ddz.NewCard(ddz.SuitTypeDiamond, 12),
 		ddz.NewCard(ddz.SuitTypeHeart, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
-		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
 		ddz.NewCard(ddz.SuitTypeDiamond, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
 		ddz.NewCard(ddz.SuitTypeClub, 12),
 		ddz.NewCard(ddz.SuitTypeSpade, 11),
 		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
 	}
 
 	info := ddz.CardTypeInfo{
