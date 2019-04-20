@@ -42,7 +42,7 @@ func findDan() {
 		MinValue: 15,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("单:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findDui() {
@@ -66,7 +66,21 @@ func findDui() {
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("对:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeDui,
+		MinValue: 6,
+	}
+
+	fmt.Println("对:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeDui,
+		MinValue: 8,
+	}
+
+	fmt.Println("对:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findLianDui() {
@@ -91,7 +105,23 @@ func findLianDui() {
 		MaxValue: 5,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("连对:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeLianDui,
+		MinValue: 4,
+		MaxValue: 6,
+	}
+
+	fmt.Println("连对:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeLianDui,
+		MinValue: 5,
+		MaxValue: 7,
+	}
+
+	fmt.Println("连对:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanBuDai() {
@@ -107,7 +137,7 @@ func findSanBuDai() {
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("三不带:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanDaiYi() {
@@ -136,31 +166,24 @@ func findSanDaiYi() {
 		MinValue: 3,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("三带一:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findSanDaiEr() {
 	cards := []*ddz.Card{
-		ddz.NewCard(ddz.SuitTypeHeart, 15),
-		ddz.NewCard(ddz.SuitTypeSpade, 15),
-		ddz.NewCard(ddz.SuitTypeClub, 15),
-		ddz.NewCard(ddz.SuitTypeSpade, 7),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeHeart, 6),
-		ddz.NewCard(ddz.SuitTypeSpade, 6),
-		ddz.NewCard(ddz.SuitTypeClub, 4),
-		ddz.NewCard(ddz.SuitTypeSpade, 4),
-		ddz.NewCard(ddz.SuitTypeHeart, 7),
-		ddz.NewCard(ddz.SuitTypeSpade, 8),
-		ddz.NewCard(ddz.SuitTypeClub, 5),
-		ddz.NewCard(ddz.SuitTypeSpade, 5),
 	}
 
 	info := ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSanDaiEr,
-		MinValue: 3,
+		MinValue: 8,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("三带二:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findShunZi() {
@@ -208,7 +231,7 @@ func findFeiJiBuDai() {
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("飞机不带:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiDaiYi() {
@@ -229,7 +252,7 @@ func findFeiJiDaiYi() {
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("飞机带一:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findFeiJiDaiEr() {
@@ -243,7 +266,7 @@ func findFeiJiDaiEr() {
 		ddz.NewCard(ddz.SuitTypeClub, 14),
 		ddz.NewCard(ddz.SuitTypeDiamond, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
-		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
 		ddz.NewCard(ddz.SuitTypeSpade, 15),
 		ddz.NewCard(ddz.SuitTypeClub, 15),
 	}
@@ -254,7 +277,7 @@ func findFeiJiDaiEr() {
 		MaxValue: 13,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("飞机带二:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findZhaDan() {
@@ -279,7 +302,7 @@ func findZhaDan() {
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("炸弹:", ddz.FindOvercomeCard(info, cards))
 
 	info = ddz.CardTypeInfo{
 		CardType: ddz.CardTypeZhaDan,
@@ -287,7 +310,7 @@ func findZhaDan() {
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("炸弹:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findHuoJian() {
@@ -312,7 +335,7 @@ func findHuoJian() {
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("火箭:", ddz.FindOvercomeCard(info, cards))
 }
 
 func findLianZha() {
@@ -341,5 +364,5 @@ func findLianZha() {
 		MaxValue: 0,
 	}
 
-	fmt.Println(ddz.FindOvercomeCard(info, cards))
+	fmt.Println("连炸:", ddz.FindOvercomeCard(info, cards))
 }

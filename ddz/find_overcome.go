@@ -65,7 +65,7 @@ func FindOvercomeCard(info CardTypeInfo, cards []*Card) (ret []*Card) {
 			return
 		}
 	case CardTypeHuoJian:
-		if ret = findBigHuoJian(cards, count, info); len(ret) != 0 {
+		if ret = findBigHuoJian(cards, count); len(ret) != 0 {
 			return
 		}
 	case CardTypeLianZha:
@@ -87,43 +87,70 @@ func FindOvercomeCard(info CardTypeInfo, cards []*Card) (ret []*Card) {
 }
 
 func findZhaDan(cards []*Card, count [18]int) (ret []*Card) {
+	var zhaDan int
 	for i := 3; i <= 15; i++ {
 		if count[i] == 4 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 4; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
-				}
+			zhaDan = i
+			break
+		}
+	}
+
+	if zhaDan == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == zhaDan {
+			for k := 0; k < 4; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
 		}
 	}
 	return
 }
 
 func findHuoJian(cards []*Card, count [18]int) (ret []*Card) {
+	var huoJian int
 	if count[16] == 1 && count[17] == 1 {
-		for _, c := range cards {
-			if int(c.Num) == 16 || int(c.Num) == 17 {
-				ret = append(ret, c)
-			}
-		}
+		huoJian = 1
+	}
+
+	if huoJian == 0 {
 		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == 16 || int(cards[i].Num) == 17 {
+			for k := 0; k < 1; k++ {
+				ret = append(ret, cards[i+k])
+			}
+			break
+		}
 	}
 	return
 }
 
 func findLianZha(cards []*Card, count [18]int) (ret []*Card) {
-	for i := 3; i <= 13; i++ {
+	var zhaDanList []int
+	for i := 3; i < 14; i++ {
 		if count[i] == 4 && count[i+1] == 4 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 8; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
+			zhaDanList = append(zhaDanList, i, i+1)
+			break
+		}
+	}
+
+	if len(zhaDanList) == 0 {
+		return
+	}
+
+	for _, zhaDan := range zhaDanList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == zhaDan {
+				for k := 0; k < 4; k++ {
+					ret = append(ret, cards[i+k])
 				}
+				break
 			}
 		}
 	}
@@ -131,30 +158,48 @@ func findLianZha(cards []*Card, count [18]int) (ret []*Card) {
 }
 
 func findBigDan(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	var dan int
 	for i := info.MinValue + 1; i <= 17; i++ {
 		if count[i] >= 1 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					ret = append(ret, cards[j])
-					return
-				}
+			dan = i
+			break
+		}
+	}
+
+	if dan == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == dan {
+			for k := 0; k < 1; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
 		}
 	}
 	return
 }
 
 func findBigDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	var dui int
 	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 2 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 2; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
-				}
+			dui = i
+			break
+		}
+	}
+
+	if dui == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == dui {
+			for k := 0; k < 2; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
 		}
 	}
 	return
@@ -163,6 +208,7 @@ func findBigDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 func findBigLianDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var duiList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -174,96 +220,144 @@ func findBigLianDui(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Car
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 2; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
-				}
+				duiList = append(duiList, j)
 			}
-			return
+			break
+		}
+	}
+
+	if len(duiList) == 0 {
+		return
+	}
+
+	for _, dui := range duiList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == dui {
+				for k := 0; k < 2; k++ {
+					ret = append(ret, cards[i+k])
+				}
+				break
+			}
 		}
 	}
 	return
 }
 
 func findBigSanBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	var san int
 	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 3; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
-				}
+			san = i
+			break
+		}
+	}
+
+	if san == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == san {
+			for k := 0; k < 3; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
 		}
 	}
 	return
 }
 
 func findBigSanDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	var san int
+	var dan int
 	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 3; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					break
-				}
-			}
+			san = i
+			break
+		}
+	}
 
-			for j := 3; j <= 17; j++ {
-				if j == i {
-					continue
-				}
+	if san == 0 {
+		return
+	}
 
-				if count[j] > 0 {
-					for k := 0; k < len(cards); k++ {
-						if int(cards[k].Num) == j {
-							ret = append(ret, cards[k])
-							return
-						}
-					}
-				}
+	for i := 3; i <= 15; i++ {
+		if i != san && count[i] >= 1 {
+			dan = i
+			break
+		}
+	}
+
+	if dan == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == san {
+			for k := 0; k < 3; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
+		}
+
+		if int(cards[i].Num) == dan {
+			for k := 0; k < 1; k++ {
+				ret = append(ret, cards[i+k])
+			}
+		}
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == dan {
+			for k := 0; k < 1; k++ {
+				ret = append(ret, cards[i+k])
+			}
+			break
 		}
 	}
 	return
 }
 
 func findBigSanDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
+	var san int
+	var dui int
 	for i := info.MinValue + 1; i <= 15; i++ {
 		if count[i] >= 3 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 3; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					break
-				}
-			}
+			san = i
+			break
+		}
+	}
 
-			for j := 3; j <= 15; j++ {
-				if j == i {
-					continue
-				}
+	if san == 0 {
+		return
+	}
 
-				if count[j] > 1 {
-					for k := 0; k < len(cards); k++ {
-						if int(cards[k].Num) == j {
-							for m := 0; m < 2; m++ {
-								ret = append(ret, cards[k+m])
-							}
-							return
-						}
-					}
-				}
+	for i := 3; i <= 15; i++ {
+		if i != san && count[i] >= 2 {
+			dui = i
+			break
+		}
+	}
+
+	if dui == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == san {
+			for k := 0; k < 3; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
+		}
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == dui {
+			for k := 0; k < 2; k++ {
+				ret = append(ret, cards[i+k])
+			}
+			break
 		}
 	}
 	return
@@ -272,6 +366,7 @@ func findBigSanDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Ca
 func findBigShunZi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var danList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -283,16 +378,24 @@ func findBigShunZi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 1; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
-				}
+				danList = append(danList, j)
 			}
-			return
+			break
+		}
+	}
+
+	if len(danList) == 0 {
+		return
+	}
+
+	for _, dan := range danList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == dan {
+				for k := 0; k < 1; k++ {
+					ret = append(ret, cards[i+k])
+				}
+				break
+			}
 		}
 	}
 	return
@@ -301,6 +404,7 @@ func findBigShunZi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card
 func findBigFeiJiBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var sanList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -312,16 +416,24 @@ func findBigFeiJiBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 3; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
-				}
+				sanList = append(sanList, j)
 			}
-			return
+			break
+		}
+	}
+
+	if len(sanList) == 0 {
+		return
+	}
+
+	for _, san := range sanList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == san {
+				for k := 0; k < 3; k++ {
+					ret = append(ret, cards[i+k])
+				}
+				break
+			}
 		}
 	}
 	return
@@ -330,6 +442,7 @@ func findBigFeiJiBuDai(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 func findBigFeiJiDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var sanList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -341,62 +454,52 @@ func findBigFeiJiDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 3; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
+				sanList = append(sanList, j)
+			}
+			break
+		}
+	}
+
+	if len(sanList) == 0 {
+		return
+	}
+
+	var danList []int
+	for i := 3; i <= 15; i++ {
+		if count[i] > 0 && count[i] < 3 {
+			for j := 0; j < count[i]; j++ {
+				danList = append(danList, i)
+
+				if len(danList) == len(sanList) {
+					break
 				}
 			}
 
-			var times int
-			for j := 3; j < i; j++ {
-				for k := 0; k < len(cards); k++ {
-					if times == valueRange {
-						return
-					}
-
-					if int(cards[k].Num) == j {
-						ret = append(ret, cards[k])
-						times++
-					}
-				}
+			if len(danList) == len(sanList) {
+				break
 			}
+		}
+	}
 
-			for j := i + valueRange; j <= 14; j++ {
-				for k := 0; k < len(cards); k++ {
-					if times == valueRange {
-						return
-					}
+	if len(danList) != len(sanList) {
+		return
+	}
 
-					if int(cards[k].Num) == j {
-						ret = append(ret, cards[k])
-						times++
-					}
+	for _, san := range sanList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == san {
+				for k := 0; k < 3; k++ {
+					ret = append(ret, cards[i+k])
 				}
+				break
 			}
+		}
+	}
 
-			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if times == valueRange {
-						return
-					}
-
-					var exist bool
-					for m := 0; m < len(ret); m++ {
-						if cards[k].Suit == ret[m].Suit && cards[k].Num == ret[m].Num {
-							exist = true
-							break
-						}
-					}
-
-					if !exist {
-						ret = append(ret, cards[k])
-						times++
-					}
-				}
+	for _, dan := range danList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == dan {
+				ret = append(ret, cards[i])
 			}
 		}
 	}
@@ -406,6 +509,7 @@ func findBigFeiJiDaiYi(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 func findBigFeiJiDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var sanList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -417,47 +521,61 @@ func findBigFeiJiDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 3; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
-				}
+				sanList = append(sanList, j)
 			}
+			break
+		}
+	}
 
-			var times int
-			for j := 3; j < i; j++ {
-				for k := 0; k < len(cards); k++ {
-					if times == valueRange {
-						return
-					}
+	if len(sanList) == 0 {
+		return
+	}
 
-					if int(cards[k].Num) == j && count[j] >= 2 {
-						for m := 0; m < 2; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						times++
-						break
-					}
-				}
+	var duiList []int
+	for i := 3; i <= 15; i++ {
+		var exist bool
+		for _, san := range sanList {
+			if san == i {
+				exist = true
+				break
 			}
+		}
 
-			for j := i + valueRange; j <= 15; j++ {
-				for k := 0; k < len(cards); k++ {
-					if times == valueRange {
-						return
-					}
+		if exist {
+			continue
+		}
 
-					if int(cards[k].Num) == j && count[j] >= 2 {
-						for m := 0; m < 2; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						times++
-						break
-					}
+		if count[i] >= 2 && count[i] < 4 {
+			duiList = append(duiList, i)
+
+			if len(duiList) == len(sanList) {
+				break
+			}
+		}
+	}
+
+	if len(duiList) != len(sanList) {
+		return
+	}
+
+	for _, san := range sanList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == san {
+				for k := 0; k < 3; k++ {
+					ret = append(ret, cards[i+k])
 				}
+				break
+			}
+		}
+	}
+
+	for _, dui := range duiList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == dui {
+				for k := 0; k < 2; k++ {
+					ret = append(ret, cards[i+k])
+				}
+				break
 			}
 		}
 	}
@@ -465,40 +583,37 @@ func findBigFeiJiDaiEr(cards []*Card, count [18]int, info CardTypeInfo) (ret []*
 }
 
 func findBigZhaDan(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
-	for i := info.MinValue + 1; i <= 15; i++ {
+	var zhaDan int
+	for i := info.MinValue + 1; i <= 17; i++ {
 		if count[i] == 4 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 4; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
-				}
+			zhaDan = i
+			break
+		}
+	}
+
+	if zhaDan == 0 {
+		return
+	}
+
+	for i := 0; i < len(cards); i++ {
+		if int(cards[i].Num) == zhaDan {
+			for k := 0; k < 4; k++ {
+				ret = append(ret, cards[i+k])
 			}
+			break
 		}
 	}
 	return
 }
 
-func findBigHuoJian(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
-	for i := 3; i < 14; i++ {
-		if count[i] == 4 && count[i+1] == 4 {
-			for j := 0; j < len(cards); j++ {
-				if int(cards[j].Num) == i {
-					for k := 0; k < 8; k++ {
-						ret = append(ret, cards[j+k])
-					}
-					return
-				}
-			}
-		}
-	}
-	return
+func findBigHuoJian(cards []*Card, count [18]int) (ret []*Card) {
+	return findLianZha(cards, count)
 }
 
 func findBigLianZha(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
 	valueRange := info.MaxValue - info.MinValue + 1
 
+	var zhaDanList []int
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -510,16 +625,24 @@ func findBigLianZha(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Car
 
 		if exist {
 			for j := i; j < i+valueRange; j++ {
-				for k := 0; k < len(cards); k++ {
-					if int(cards[k].Num) == j {
-						for m := 0; m < 4; m++ {
-							ret = append(ret, cards[k+m])
-						}
-						break
-					}
-				}
+				zhaDanList = append(zhaDanList, j)
 			}
-			return
+			break
+		}
+	}
+
+	if len(zhaDanList) == 0 {
+		return
+	}
+
+	for _, zhaDan := range zhaDanList {
+		for i := 0; i < len(cards); i++ {
+			if int(cards[i].Num) == zhaDan {
+				for k := 0; k < 4; k++ {
+					ret = append(ret, cards[i+k])
+				}
+				break
+			}
 		}
 	}
 	return
