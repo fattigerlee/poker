@@ -313,7 +313,23 @@ func overcomeLianZha(cards []*Card, count [18]int, info CardTypeInfo) bool {
 		return false
 	}
 
+	// 比连炸更大的连炸
 	for i := info.MinValue + 1; i <= 14-valueRange; i++ {
+		exist := true
+		for j := i; j < i+valueRange; j++ {
+			if count[j] != 4 {
+				exist = false
+				break
+			}
+		}
+		if exist {
+			return true
+		}
+	}
+
+	// 比连炸更多的连炸
+	valueRange = valueRange + 1
+	for i := 3; i <= 14-valueRange; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
 			if count[j] != 4 {

@@ -388,4 +388,12 @@ func findLianZha() {
 	}
 
 	fmt.Println("连炸:", ddz.FindOvercomeCard(info, cards))
+
+	info = ddz.CardTypeInfo{
+		CardType: ddz.CardTypeLianZha,
+		MinValue: 13,
+		MaxValue: 14,
+	}
+
+	fmt.Println("连炸:", ddz.FindOvercomeCard(info, cards))
 }

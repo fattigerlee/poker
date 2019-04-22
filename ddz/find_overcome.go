@@ -614,9 +614,10 @@ func findBigHuoJian(cards []*Card, count [18]int) (ret []*Card) {
 }
 
 func findBigLianZha(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Card) {
-	valueRange := info.MaxValue - info.MinValue + 1
-
 	var zhaDanList []int
+
+	// 比连炸更大的连炸
+	valueRange := info.MaxValue - info.MinValue + 1
 	for i := info.MinValue + 1; i <= 14; i++ {
 		exist := true
 		for j := i; j < i+valueRange; j++ {
@@ -634,17 +635,48 @@ func findBigLianZha(cards []*Card, count [18]int, info CardTypeInfo) (ret []*Car
 		}
 	}
 
-	if len(zhaDanList) == 0 {
+	if len(zhaDanList) > 0 {
+		for _, zhaDan := range zhaDanList {
+			for i := 0; i < len(cards); i++ {
+				if int(cards[i].Num) == zhaDan {
+					for k := 0; k < 4; k++ {
+						ret = append(ret, cards[i+k])
+					}
+					break
+				}
+			}
+		}
 		return
 	}
 
-	for _, zhaDan := range zhaDanList {
-		for i := 0; i < len(cards); i++ {
-			if int(cards[i].Num) == zhaDan {
-				for k := 0; k < 4; k++ {
-					ret = append(ret, cards[i+k])
-				}
+	// 比连炸更多的连炸
+	valueRange = valueRange + 1
+	for i := 3; i <= 14-valueRange; i++ {
+		exist := true
+		for j := i; j < i+valueRange; j++ {
+			if count[j] < 4 {
+				exist = false
 				break
+			}
+		}
+
+		if exist {
+			for j := i; j < i+valueRange; j++ {
+				zhaDanList = append(zhaDanList, j)
+			}
+			break
+		}
+	}
+
+	if len(zhaDanList) > 0 {
+		for _, zhaDan := range zhaDanList {
+			for i := 0; i < len(cards); i++ {
+				if int(cards[i].Num) == zhaDan {
+					for k := 0; k < 4; k++ {
+						ret = append(ret, cards[i+k])
+					}
+					break
+				}
 			}
 		}
 	}
