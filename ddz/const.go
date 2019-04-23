@@ -32,7 +32,8 @@ func (n NumType) String() string {
 type SuitType int
 
 const (
-	SuitTypeJoker   SuitType = iota
+	SuitTypeNone    SuitType = iota
+	SuitTypeJoker            // 鬼牌
 	SuitTypeHeart            // 红桃
 	SuitTypeSpade            // 黑桃
 	SuitTypeDiamond          // 方块
@@ -60,22 +61,38 @@ func (s SuitType) String() string {
 type CardType int
 
 const (
-	CardTypeNone       CardType = iota
-	CardTypeDan                 // 单
-	CardTypeDui                 // 对
-	CardTypeLianDui             // 连对
-	CardTypeSanBuDai            // 三不带
-	CardTypeSanDaiYi            // 三带一
-	CardTypeSanDaiEr            // 三带二
-	CardTypeSiDaiDan            // 四带单(炸弹带两张单)
-	CardTypeSiDaiDui            // 四带对(炸弹带两对)
-	CardTypeShunZi              // 顺子
-	CardTypeFeiJiBuDai          // 飞机不带
-	CardTypeFeiJiDaiYi          // 飞机带一
-	CardTypeFeiJiDaiEr          // 飞机带二
-	CardTypeZhaDan              // 炸弹
-	CardTypeHuoJian             // 火箭
-	CardTypeLianZha             // 连炸
+	CardTypeNone            CardType = iota
+	CardTypeDan                      // 单
+	CardTypeDui                      // 对
+	CardTypeLianDui                  // 连对
+	CardTypeSanBuDai                 // 三不带
+	CardTypeSanDaiYi                 // 三带一
+	CardTypeSanDaiEr                 // 三带二
+	CardTypeSiDaiDan                 // 四带单(炸弹带两张单)
+	CardTypeSiDaiDui                 // 四带对(炸弹带两对)
+	CardTypeShunZi                   // 顺子
+	CardTypeFeiJiBuDai               // 飞机不带
+	CardTypeFeiJiDaiYi               // 飞机带一
+	CardTypeFeiJiDaiEr               // 飞机带二
+	CardTypeRuanZhaDan4              // 四软炸
+	CardTypeZhaDan                   // 硬炸弹
+	CardTypeLaiZiZhaDan4             // 四癞子炸弹
+	CardTypeChunLaiZiZhaDan          // 四纯癞子炸弹
+	CardTypeRuanZhaDan5              // 五软炸
+	CardTypeLaiZiZhaDan5             // 五癞子炸弹
+	CardTypeRuanZhaDan6              // 六软炸
+	CardTypeLaiZiZhaDan6             // 六癞子炸弹
+	CardTypeRuanZhaDan7              // 七软炸
+	CardTypeLaiZiZhaDan7             // 七癞子炸弹
+	CardTypeRuanZhaDan8              // 八软炸
+	CardTypeLaiZiZhaDan8             // 八癞子炸弹
+	CardTypeRuanZhaDan9              // 九软炸
+	CardTypeRuanZhaDan10             // 十软炸
+	CardTypeRuanZhaDan11             // 十一软炸
+	CardTypeRuanZhaDan12             // 十二软炸
+	CardTypeHuoJian                  // 火箭
+	CardTypeRuanLianZha              // 软连炸
+	CardTypeLianZha                  // 硬连炸
 )
 
 func (c CardType) String() string {
@@ -104,12 +121,44 @@ func (c CardType) String() string {
 		return "飞机带一"
 	case CardTypeFeiJiDaiEr:
 		return "飞机带二"
+	case CardTypeRuanZhaDan4:
+		return "四软炸"
 	case CardTypeZhaDan:
-		return "炸弹"
+		return "硬炸弹"
+	case CardTypeLaiZiZhaDan4:
+		return "四癞子炸弹"
+	case CardTypeChunLaiZiZhaDan:
+		return "四纯癞子炸弹"
+	case CardTypeRuanZhaDan5:
+		return "五软炸"
+	case CardTypeLaiZiZhaDan5:
+		return "五癞子炸弹"
+	case CardTypeRuanZhaDan6:
+		return "六软炸"
+	case CardTypeLaiZiZhaDan6:
+		return "六癞子炸弹"
+	case CardTypeRuanZhaDan7:
+		return "七软炸"
+	case CardTypeLaiZiZhaDan7:
+		return "七癞子炸弹"
+	case CardTypeRuanZhaDan8:
+		return "八软炸"
+	case CardTypeLaiZiZhaDan8:
+		return "八癞子炸弹"
+	case CardTypeRuanZhaDan9:
+		return "九软炸"
+	case CardTypeRuanZhaDan10:
+		return "十软炸"
+	case CardTypeRuanZhaDan11:
+		return "十一软炸"
+	case CardTypeRuanZhaDan12:
+		return "十二软炸"
 	case CardTypeHuoJian:
 		return "火箭"
+	case CardTypeRuanLianZha:
+		return "软连炸"
 	case CardTypeLianZha:
-		return "连炸"
+		return "硬连炸"
 	default:
 		return "牌型错误"
 	}
