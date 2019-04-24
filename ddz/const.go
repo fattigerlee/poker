@@ -64,13 +64,13 @@ const (
 	CardTypeNone            CardType = iota
 	CardTypeDan                      // 单
 	CardTypeDui                      // 对
-	CardTypeLianDui                  // 连对
 	CardTypeSanBuDai                 // 三不带
 	CardTypeSanDaiYi                 // 三带一
 	CardTypeSanDaiEr                 // 三带二
 	CardTypeSiDaiDan                 // 四带单(炸弹带两张单)
 	CardTypeSiDaiDui                 // 四带对(炸弹带两对)
 	CardTypeShunZi                   // 顺子
+	CardTypeLianDui                  // 连对
 	CardTypeFeiJiBuDai               // 飞机不带
 	CardTypeFeiJiDaiYi               // 飞机带一
 	CardTypeFeiJiDaiEr               // 飞机带二
@@ -101,8 +101,6 @@ func (c CardType) String() string {
 		return "单"
 	case CardTypeDui:
 		return "对"
-	case CardTypeLianDui:
-		return "连对"
 	case CardTypeSanBuDai:
 		return "三不带"
 	case CardTypeSanDaiYi:
@@ -115,6 +113,8 @@ func (c CardType) String() string {
 		return "四带对(炸弹带两对)"
 	case CardTypeShunZi:
 		return "顺子"
+	case CardTypeLianDui:
+		return "连对"
 	case CardTypeFeiJiBuDai:
 		return "飞机不带"
 	case CardTypeFeiJiDaiYi:
