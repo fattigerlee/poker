@@ -5,6 +5,15 @@ import "strconv"
 // 牌值
 type NumType int
 
+const (
+	NumTypeNone       NumType = iota
+	NumTypeThree              = 3
+	NumTypeAce                = 14
+	NumTypeTwo                = 15
+	NumTypeSmallJoker         = 16
+	NumTypeBigJoker           = 17
+)
+
 func (n NumType) String() string {
 	switch n {
 	case 3, 4, 5, 6, 7, 8, 9, 10:
@@ -15,13 +24,13 @@ func (n NumType) String() string {
 		return "Q"
 	case 13:
 		return "K"
-	case 14:
+	case NumTypeAce:
 		return "A"
-	case 15:
+	case NumTypeTwo:
 		return "2"
-	case 16:
+	case NumTypeSmallJoker:
 		return "小王"
-	case 17:
+	case NumTypeBigJoker:
 		return "大王"
 	default:
 		return "牌值错误"
@@ -76,22 +85,22 @@ const (
 	CardTypeFeiJiDaiEr               // 飞机带二
 	CardTypeRuanZhaDan4              // 四软炸
 	CardTypeZhaDan                   // 硬炸弹
-	CardTypeLaiZiZhaDan4             // 四癞子炸弹
-	CardTypeChunLaiZiZhaDan          // 四纯癞子炸弹
+	CardTypeLaiZiZhaDan4             // 四癞子炸
+	CardTypeChunLaiZiZhaDan          // 四纯癞子炸
 	CardTypeRuanZhaDan5              // 五软炸
-	CardTypeLaiZiZhaDan5             // 五癞子炸弹
+	CardTypeLaiZiZhaDan5             // 五癞子炸
 	CardTypeRuanZhaDan6              // 六软炸
-	CardTypeLaiZiZhaDan6             // 六癞子炸弹
+	CardTypeLaiZiZhaDan6             // 六癞子炸
 	CardTypeRuanZhaDan7              // 七软炸
-	CardTypeLaiZiZhaDan7             // 七癞子炸弹
+	CardTypeLaiZiZhaDan7             // 七癞子炸
 	CardTypeRuanZhaDan8              // 八软炸
-	CardTypeLaiZiZhaDan8             // 八癞子炸弹
+	CardTypeLaiZiZhaDan8             // 八癞子炸
 	CardTypeRuanZhaDan9              // 九软炸
 	CardTypeRuanZhaDan10             // 十软炸
 	CardTypeRuanZhaDan11             // 十一软炸
 	CardTypeRuanZhaDan12             // 十二软炸
 	CardTypeHuoJian                  // 火箭
-	CardTypeRuanLianZha              // 软连炸
+	CardTypeRuanLianZha              // 软连炸(癞子只有大小王)
 	CardTypeLianZha                  // 硬连炸
 )
 
@@ -195,3 +204,12 @@ func (c BottomCardType) String() string {
 		return "底牌牌型错误"
 	}
 }
+
+// 结果类型
+type ResultType int
+
+const (
+	ResultTypeNone ResultType = iota
+	ResultTypeMin             // 最小值
+	ResultTypeMax             // 最大值
+)
