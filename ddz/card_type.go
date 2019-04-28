@@ -92,16 +92,16 @@ func isJokerAndTwo(value int) bool {
 
 // 无癞子算法
 func analysis(cards []*Card) (list []*CardTypeInfo) {
-	// 排序
-	sort.Slice(cards, func(i, j int) bool {
-		return cards[i].Num < cards[j].Num
-	})
-
-	size := len(cards)        // 牌总数量
-	count := cardCount(cards) // 每张牌数量
-	var value valueList       // 所有单张,对子,三张,四张的牌值
+	size := len(cards)             // 牌总数量
+	cardsCount := cardCount(cards) // 每张牌数量
+	var value valueList            // 所有单张,对子,三张,四张的牌值
+	var line []int                 // 连牌
 	for i := 3; i < 18; i++ {
-		switch count[i] {
+		if cardsCount[i] > 0 {
+			line = append(line, i)
+		}
+
+		switch cardsCount[i] {
 		case 1:
 			value[1] = append(value[1], i)
 		case 2:
@@ -116,98 +116,98 @@ func analysis(cards []*Card) (list []*CardTypeInfo) {
 	switch len(cards) {
 	case 1:
 		// 单
-		if info := isDan(cards); info.CardType != CardTypeNone {
+		if info := isDan(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 2:
 		// 对
-		if info := isDui(cards); info.CardType != CardTypeNone {
+		if info := isDui(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 		// 火箭
-		if info := isHuoJian(cards, count); info.CardType != CardTypeNone {
+		if info := isHuoJian(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 3:
 		// 三不带
-		if info := isSanBuDai(cards, count); info.CardType != CardTypeNone {
+		if info := isSanBuDai(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 4:
 		// 三带一
-		if info := isSanDaiYi(cards, count); info.CardType != CardTypeNone {
+		if info := isSanDaiYi(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 		// 炸弹
-		if info := isZhaDan(cards, count); info.CardType != CardTypeNone {
+		if info := isZhaDan(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 5:
 		// 三带二
-		if info := isSanDaiEr(cards, count); info.CardType != CardTypeNone {
+		if info := isSanDaiEr(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 6:
 		// 四带单
-		if info := isSiDaiDan(cards, count); info.CardType != CardTypeNone {
+		if info := isSiDaiDan(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 
 	case 8:
 		// 四带对
-		if info := isSiDaiDui(cards, count); info.CardType != CardTypeNone {
+		if info := isSiDaiDui(size, value); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
 	}
 
 	// 顺子
-	if info := isShunZi(cards, count); info.CardType != CardTypeNone {
+	if info := isShunZi(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
 
 	// 连对
-	if info := isLianDui(size, value); info.CardType != CardTypeNone {
+	if info := isLianDui(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
 
 	// 飞机不带
-	if info := isFeiJiBuDai(cards, count); info.CardType != CardTypeNone {
+	if info := isFeiJiBuDai(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
 
 	// 飞机带一
-	if info := isFeiJiDaiYi(cards, count); info.CardType != CardTypeNone {
+	if info := isFeiJiDaiYi(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
 
 	// 飞机带二
-	if info := isFeiJiDaiEr(cards, count); info.CardType != CardTypeNone {
+	if info := isFeiJiDaiEr(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
 
 	// 连炸
-	if info := isLianZha(cards, count); info.CardType != CardTypeNone {
+	if info := isLianZha(size, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
@@ -215,34 +215,127 @@ func analysis(cards []*Card) (list []*CardTypeInfo) {
 }
 
 // 单
-func isDan(cards []*Card) (info CardTypeInfo) {
-	if len(cards) != 1 {
+func isDan(size int, value valueList) (info CardTypeInfo) {
+	if size != 1 {
 		return
 	}
 
 	info.CardType = CardTypeDan
-	info.MinValue = int(cards[0].Num)
+	info.MinValue = value[1][0]
 	return
 }
 
 // 对
-func isDui(cards []*Card) (info CardTypeInfo) {
-	if len(cards) != 2 {
+func isDui(size int, value valueList) (info CardTypeInfo) {
+	if size != 2 {
 		return
 	}
 
 	// 牌值相同
-	if cards[0].Num != cards[1].Num {
+	if len(value[2]) == 1 {
+		info.CardType = CardTypeDui
+		info.MinValue = value[2][0]
+	}
+	return
+}
+
+// 三不带
+func isSanBuDai(size int, value valueList) (info CardTypeInfo) {
+	if size != 3 {
 		return
 	}
 
-	info.CardType = CardTypeDui
-	info.MinValue = int(cards[0].Num)
+	if len(value[3]) == 1 {
+		info.CardType = CardTypeSanBuDai
+		info.MinValue = value[3][0]
+	}
+	return
+}
+
+// 三带一
+func isSanDaiYi(size int, value valueList) (info CardTypeInfo) {
+	if size != 4 {
+		return
+	}
+
+	if len(value[3]) == 1 && len(value[1]) == 1 {
+		info.CardType = CardTypeSanDaiYi
+		info.MinValue = value[3][0]
+	}
+	return
+}
+
+// 三带二
+func isSanDaiEr(size int, value valueList) (info CardTypeInfo) {
+	if size != 5 {
+		return
+	}
+
+	if len(value[3]) == 1 && len(value[2]) == 1 {
+		info.CardType = CardTypeSanDaiEr
+		info.MinValue = value[3][0]
+	}
+	return
+}
+
+// 四带单(炸弹带两张单)
+func isSiDaiDan(size int, value valueList) (info CardTypeInfo) {
+	if size != 6 {
+		return
+	}
+
+	if len(value[4]) == 1 && (len(value[1]) == 2 || len(value[2]) == 1) {
+		info.CardType = CardTypeSiDaiDan
+		info.MinValue = value[4][0]
+	}
+	return
+}
+
+// 四带对(炸弹带两对)
+func isSiDaiDui(size int, value valueList) (info CardTypeInfo) {
+	if size != 8 {
+		return
+	}
+
+	if len(value[4]) == 1 && len(value[2]) == 2 {
+		info.CardType = CardTypeSiDaiDui
+		info.MinValue = value[4][0]
+	}
+	return
+}
+
+// 顺子
+func isShunZi(size int, value valueList, line []int) (info CardTypeInfo) {
+	if size < 5 || size > 12 {
+		return
+	}
+
+	// 只能有单张
+	if len(value[2]) != 0 || len(value[3]) != 0 || len(value[4]) != 0 {
+		return
+	}
+
+	// 不能有2和大小王
+	for _, v := range line {
+		if isJokerAndTwo(v) {
+			return
+		}
+	}
+
+	// 必须连续
+	valueRange := line[len(line)-1] - line[0] + 1
+	if valueRange != size {
+		return
+	}
+
+	info.CardType = CardTypeShunZi
+	info.MinValue = line[0]
+	info.MaxValue = line[len(line)-1]
 	return
 }
 
 // 连对
-func isLianDui(size int, value valueList) (info CardTypeInfo) {
+func isLianDui(size int, value valueList, line []int) (info CardTypeInfo) {
 	if size < 6 || size%2 != 0 {
 		return
 	}
@@ -252,354 +345,187 @@ func isLianDui(size int, value valueList) (info CardTypeInfo) {
 		return
 	}
 
-	// 对子必须连续
-	minValue := value[2][0]
-	maxValue := value[2][len(value[2])-1]
-	valueRange := maxValue - minValue + 1
+	// 不能有2和大小王
+	for _, v := range line {
+		if isJokerAndTwo(v) {
+			return
+		}
+	}
 
+	// 必须连续
+	valueRange := line[len(line)-1] - line[0] + 1
 	if valueRange != size/2 {
 		return
 	}
 
 	info.CardType = CardTypeLianDui
-	info.MinValue = minValue
-	info.MaxValue = maxValue
-
-	//minValue := getMinValue(count, 2)
-	//maxValue := getMaxValue(count, 2)
-	//valueRange := maxValue - minValue + 1
-	//
-	//size := len(cards)
-	//if size < 6 || size != valueRange*2 {
-	//	return
-	//}
-	//
-	//exist := true
-	//for i := minValue; i <= maxValue; i++ {
-	//	if count[i] != 2 {
-	//		exist = false
-	//		break
-	//	}
-	//}
-	//
-	//if exist {
-	//	info.CardType = CardTypeLianDui
-	//	info.MinValue = minValue
-	//	info.MaxValue = maxValue
-	//	return
-	//}
-	return
-}
-
-// 三不带
-func isSanBuDai(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 3 {
-		return
-	}
-
-	for i := 3; i <= 15; i++ {
-		if count[i] == 3 {
-			info.CardType = CardTypeSanBuDai
-			info.MinValue = i
-			return
-		}
-	}
-	return
-}
-
-// 三带一
-func isSanDaiYi(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 4 {
-		return
-	}
-
-	for i := 3; i <= 15; i++ {
-		if count[i] == 3 {
-			info.CardType = CardTypeSanDaiYi
-			info.MinValue = i
-			return
-		}
-	}
-	return
-}
-
-// 三带二
-func isSanDaiEr(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 5 {
-		return
-	}
-
-	var exist bool
-	for i := 3; i <= 15; i++ {
-		if count[i] == 2 {
-			exist = true
-			break
-		}
-	}
-
-	if !exist {
-		return
-	}
-
-	for i := 3; i <= 15; i++ {
-		if count[i] == 3 {
-			info.CardType = CardTypeSanDaiEr
-			info.MinValue = i
-			return
-		}
-	}
-	return
-}
-
-// 四带单(炸弹带两张单)
-func isSiDaiDan(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 6 {
-		return
-	}
-
-	for i := 3; i <= 15; i++ {
-		if count[i] == 4 {
-			info.CardType = CardTypeSiDaiDan
-			info.MinValue = i
-			return
-		}
-	}
-	return
-}
-
-// 四带对(炸弹带两对)
-func isSiDaiDui(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 8 {
-		return
-	}
-
-	var exist int
-	for i := 3; i <= 15; i++ {
-		if count[i] == 2 {
-			exist++
-		}
-	}
-
-	if exist != 2 {
-		return
-	}
-
-	for i := 3; i <= 15; i++ {
-		if count[i] == 4 {
-			info.CardType = CardTypeSiDaiDui
-			info.MinValue = i
-			return
-		}
-	}
-	return
-}
-
-// 顺子
-func isShunZi(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) < 5 {
-		return
-	}
-
-	minValue := getMinValue(count, 1)
-	maxValue := getMaxValue(count, 1)
-	valueRange := maxValue - minValue + 1
-
-	if len(cards) != valueRange {
-		return
-	}
-
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] != 1 {
-			exist = false
-			break
-		}
-	}
-
-	if exist {
-		info.CardType = CardTypeShunZi
-		info.MinValue = minValue
-		info.MaxValue = maxValue
-		return
-	}
+	info.MinValue = line[0]
+	info.MaxValue = line[len(line)-1]
 	return
 }
 
 // 飞机不带
-func isFeiJiBuDai(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) < 6 {
+func isFeiJiBuDai(size int, value valueList, line []int) (info CardTypeInfo) {
+	if size < 6 || size%3 != 0 {
 		return
 	}
 
-	minValue := getMinValue(count, 3)
-	maxValue := getMaxValue(count, 3)
-	valueRange := maxValue - minValue + 1
-
-	if len(cards) != valueRange*3 {
+	// 只能有三张
+	if len(value[1]) != 0 || len(value[2]) != 0 || len(value[4]) != 0 {
 		return
 	}
 
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] != 3 {
-			exist = false
-			break
+	// 不能有2和大小王
+	for _, v := range line {
+		if isJokerAndTwo(v) {
+			return
 		}
 	}
 
-	if exist {
-		info.CardType = CardTypeFeiJiBuDai
-		info.MinValue = minValue
-		info.MaxValue = maxValue
+	// 必须连续
+	valueRange := line[len(line)-1] - line[0] + 1
+	if valueRange != size/3 {
 		return
 	}
+
+	info.CardType = CardTypeFeiJiBuDai
+	info.MinValue = line[0]
+	info.MaxValue = line[len(line)-1]
 	return
 }
 
 // 飞机带一
-func isFeiJiDaiYi(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) < 8 {
+func isFeiJiDaiYi(size int, value valueList, line []int) (info CardTypeInfo) {
+	if size < 8 || size%4 != 0 {
 		return
 	}
 
 	// 连炸不是飞机带一
-	if isLianZha(cards, count).CardType != CardTypeNone {
+	info = isLianZha(size, value, line)
+	if info.CardType != CardTypeNone {
 		return
 	}
 
-	var minValue int
-	var maxValue int
-	for i := 3; i <= 14; i++ {
-		if count[i] >= 3 {
-			minValue = i
-			break
+	// 统计所有的三张和四张
+	var newLine []int
+	for _, v := range value[3] {
+		if isJokerAndTwo(v) {
+			continue
 		}
+		newLine = append(newLine, v)
 	}
 
-	for i := 14; i >= 3; i-- {
-		if count[i] >= 3 {
-			maxValue = i
-			break
+	for _, v := range value[4] {
+		if isJokerAndTwo(v) {
+			continue
 		}
+		newLine = append(newLine, v)
 	}
-	valueRange := maxValue - minValue + 1
 
-	if len(cards) != valueRange*4 {
+	if len(newLine) != size/4 {
 		return
 	}
 
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] < 3 {
-			exist = false
-			break
-		}
-	}
+	sort.Slice(newLine, func(i, j int) bool {
+		return newLine[i] < newLine[j]
+	})
 
-	if exist {
-		info.CardType = CardTypeFeiJiDaiYi
-		info.MinValue = minValue
-		info.MaxValue = maxValue
+	// 必须连续
+	valueRange := newLine[len(newLine)-1] - newLine[0] + 1
+	if valueRange != size/4 {
 		return
 	}
+
+	info.CardType = CardTypeFeiJiDaiYi
+	info.MinValue = newLine[0]
+	info.MaxValue = newLine[len(newLine)-1]
 	return
 }
 
 // 飞机带二
-func isFeiJiDaiEr(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) < 10 {
+func isFeiJiDaiEr(size int, value valueList, line []int) (info CardTypeInfo) {
+	if size < 10 || size%5 != 0 {
 		return
 	}
 
-	var times int
-	for i := 3; i <= 15; i++ {
-		if count[i] == 2 {
-			times++
+	// 不能有单张和四张
+	if len(value[1]) != 0 || len(value[4]) != 0 {
+		return
+	}
+
+	// 三张不能有2
+	for _, v := range value[3] {
+		if isJokerAndTwo(v) {
+			return
 		}
 	}
 
-	minValue := getMinValue(count, 3)
-	maxValue := getMaxValue(count, 3)
-	valueRange := maxValue - minValue + 1
-
-	if len(cards) != valueRange*5 || times != valueRange {
+	// 必须连续
+	valueRange := value[3][len(value[3])-1] - value[3][0] + 1
+	if valueRange != size/5 {
 		return
 	}
 
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] != 3 {
-			exist = false
-			break
-		}
-	}
-
-	if exist {
-		info.CardType = CardTypeFeiJiDaiEr
-		info.MinValue = minValue
-		info.MaxValue = maxValue
-		return
-	}
+	info.CardType = CardTypeFeiJiDaiEr
+	info.MinValue = value[3][0]
+	info.MaxValue = value[3][len(value[3])-1]
 	return
 }
 
 // 炸弹
-func isZhaDan(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 4 {
+func isZhaDan(size int, value valueList) (info CardTypeInfo) {
+	if size != 4 {
 		return
 	}
 
-	for i := 3; i <= 15; i++ {
-		if count[i] == 4 {
-			info.CardType = CardTypeZhaDan
-			info.MinValue = i
-			return
-		}
+	if len(value[4]) == 1 {
+		info.CardType = CardTypeZhaDan
+		info.MinValue = value[4][0]
 	}
 	return
 }
 
 // 火箭
-func isHuoJian(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) != 2 {
+func isHuoJian(size int, value valueList) (info CardTypeInfo) {
+	if size != 2 {
 		return
 	}
 
-	if count[16] == 1 && count[17] == 1 {
-		info.CardType = CardTypeHuoJian
-		return
+	if len(value[1]) == 2 {
+		if value[1][0] == NumTypeSmallJoker && value[1][1] == NumTypeBigJoker {
+			info.CardType = CardTypeHuoJian
+		}
 	}
 	return
 }
 
 // 连炸
-func isLianZha(cards []*Card, count [18]int) (info CardTypeInfo) {
-	if len(cards) < 8 {
+func isLianZha(size int, value valueList, line []int) (info CardTypeInfo) {
+	if size < 8 || size%4 != 0 {
 		return
 	}
 
-	minValue := getMinValue(count, 4)
-	maxValue := getMaxValue(count, 4)
-	valueRange := maxValue - minValue + 1
-
-	if len(cards) != valueRange*4 {
+	// 只能有四张
+	if len(value[1]) != 0 || len(value[2]) != 0 || len(value[3]) != 0 {
 		return
 	}
 
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] != 4 {
-			exist = false
-			break
+	// 不能有2和大小王
+	for _, v := range line {
+		if isJokerAndTwo(v) {
+			return
 		}
 	}
 
-	if exist {
-		info.CardType = CardTypeLianZha
-		info.MinValue = minValue
-		info.MaxValue = maxValue
+	// 必须连续
+	valueRange := line[len(line)-1] - line[0] + 1
+	if valueRange != size/4 {
 		return
 	}
+
+	info.CardType = CardTypeLianZha
+	info.MinValue = line[0]
+	info.MaxValue = line[len(line)-1]
 	return
 }
 
