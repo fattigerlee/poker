@@ -178,8 +178,8 @@ type BottomCardType int
 
 const (
 	BottomCardTypeNone        BottomCardType = iota
-	BottomCardTypeWangZha                    // 王炸
-	BottomCardTypeDanWang                    // 单王
+	BottomCardTypeHuoJian                    // 火箭
+	BottomCardTypeOneJoker                   // 单王
 	BottomCardTypeTongHuaShun                // 同花顺
 	BottomCardTypeTongHua                    // 同花
 	BottomCardTypeShunZi                     // 顺子
@@ -188,9 +188,9 @@ const (
 
 func (c BottomCardType) String() string {
 	switch c {
-	case BottomCardTypeWangZha:
-		return "王炸"
-	case BottomCardTypeDanWang:
+	case BottomCardTypeHuoJian:
+		return "火箭"
+	case BottomCardTypeOneJoker:
 		return "单王"
 	case BottomCardTypeTongHuaShun:
 		return "同花顺"

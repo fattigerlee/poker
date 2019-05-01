@@ -42,26 +42,6 @@ func cardCount(cards []*Card) countList {
 	return count
 }
 
-// 获取最小的牌
-func getMinValue(count [18]int, repeatCount int) int {
-	for i := 3; i <= 14; i++ {
-		if count[i] == repeatCount {
-			return i
-		}
-	}
-	return 0
-}
-
-// 获取最大的牌
-func getMaxValue(count [18]int, repeatCount int) int {
-	for i := 14; i >= 3; i-- {
-		if count[i] == repeatCount {
-			return i
-		}
-	}
-	return 0
-}
-
 // 获取非癞子数组
 func getNoLaiZiCards(cards []*Card) []*Card {
 	var newCards []*Card
@@ -491,10 +471,8 @@ func isHuoJian(size int, value valueList) (info CardTypeInfo) {
 		return
 	}
 
-	if len(value[1]) == 2 {
-		if value[1][0] == NumTypeSmallJoker && value[1][1] == NumTypeBigJoker {
-			info.CardType = CardTypeHuoJian
-		}
+	if huoJian(value) {
+		info.CardType = CardTypeHuoJian
 	}
 	return
 }

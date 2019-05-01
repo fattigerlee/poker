@@ -2,15 +2,35 @@ package ddz
 
 // 底牌牌型判定
 func GetBottomCardType(cards []*Card) BottomCardType {
-	if wangZha(cards) {
-		return BottomCardTypeWangZha
+	cardsCount := cardCount(cards) // 每张牌数量
+	var value valueList            // 所有单张,对子,三张,四张的牌值
+	var line []int                 // 连牌
+	for i := 3; i < 18; i++ {
+		if cardsCount[i] > 0 {
+			line = append(line, i)
+		}
+
+		switch cardsCount[i] {
+		case 1:
+			value[1] = append(value[1], i)
+		case 2:
+			value[2] = append(value[2], i)
+		case 3:
+			value[3] = append(value[3], i)
+		case 4:
+			value[4] = append(value[4], i)
+		}
 	}
 
-	if danWang(cards) {
-		return BottomCardTypeDanWang
+	if huoJian(value) {
+		return BottomCardTypeHuoJian
 	}
 
-	if tongHuaShun(cards) {
+	if oneJoker(value) {
+		return BottomCardTypeOneJoker
+	}
+
+	if tongHuaShun(cards, value, line) {
 		return BottomCardTypeTongHuaShun
 	}
 
@@ -18,42 +38,58 @@ func GetBottomCardType(cards []*Card) BottomCardType {
 		return BottomCardTypeTongHua
 	}
 
-	if shunZi(cards) {
+	if shunZi(value, line) {
 		return BottomCardTypeShunZi
 	}
 
-	if sanBuDai(cards) {
+	if sanBuDai(value) {
 		return BottomCardTypeSanBuDai
 	}
 	return BottomCardTypeNone
 }
 
-// 王炸
-func wangZha(cards []*Card) bool {
-	count := cardCount(cards)
-	if count[16] == 1 && count[17] == 1 {
+// 火箭
+func huoJian(value valueList) bool {
+	var smallJoker bool
+	var bigJoker bool
+	for _, v := range value[1] {
+		if v == NumTypeSmallJoker {
+			smallJoker = true
+		}
+
+		if v == NumTypeBigJoker {
+			bigJoker = true
+		}
+	}
+
+	if smallJoker == true && bigJoker == true {
 		return true
 	}
 	return false
 }
 
 // 单王
-func danWang(cards []*Card) bool {
-	count := cardCount(cards)
+func oneJoker(value valueList) bool {
+	var joker int
+	for _, v := range value[1] {
+		if v == NumTypeSmallJoker || v == NumTypeBigJoker {
+			joker++
+		}
+	}
 
-	if count[16] == 1 || count[17] == 1 {
+	if joker == 1 {
 		return true
 	}
 	return false
 }
 
 // 同花顺
-func tongHuaShun(cards []*Card) bool {
+func tongHuaShun(cards []*Card, value valueList, line []int) bool {
 	if !tongHua(cards) {
 		return false
 	}
 
-	if !shunZi(cards) {
+	if !shunZi(value, line) {
 		return false
 	}
 	return true
@@ -61,8 +97,13 @@ func tongHuaShun(cards []*Card) bool {
 
 // 同花
 func tongHua(cards []*Card) bool {
-	for i := 0; i < len(cards)-1; i++ {
-		if cards[i].Suit != cards[i+1].Suit {
+	if len(cards) == 0 {
+		return false
+	}
+
+	suit := cards[0].Suit
+	for _, c := range cards {
+		if suit != c.Suit {
 			return false
 		}
 	}
@@ -70,37 +111,36 @@ func tongHua(cards []*Card) bool {
 }
 
 // 顺子
-func shunZi(cards []*Card) bool {
-	count := cardCount(cards)
-	minValue := getMinValue(count, 1)
-	maxValue := getMaxValue(count, 1)
-	valueRange := maxValue - minValue + 1
-
-	if len(cards) != valueRange {
+func shunZi(value valueList, line []int) bool {
+	// 只能有单张
+	if len(value[2]) != 0 || len(value[3]) != 0 || len(value[4]) != 0 {
 		return false
 	}
 
-	exist := true
-	for i := minValue; i <= maxValue; i++ {
-		if count[i] != 1 {
-			exist = false
-			break
+	// 不能有2和大小王
+	for _, v := range line {
+		if isJokerAndTwo(v) {
+			return false
 		}
 	}
 
-	if exist {
-		return true
+	// 必须连续
+	valueRange := line[len(line)-1] - line[0] + 1
+	if valueRange != len(line) {
+		return false
 	}
-	return false
+	return true
 }
 
 // 三不带
-func sanBuDai(cards []*Card) bool {
-	count := cardCount(cards)
-	for i := 3; i <= 15; i++ {
-		if count[i] == 3 {
-			return true
-		}
+func sanBuDai(value valueList) bool {
+	// 只能有三张
+	if len(value[1]) != 0 || len(value[2]) != 0 || len(value[4]) != 0 {
+		return false
 	}
-	return false
+
+	if len(value[3]) != 1 {
+		return false
+	}
+	return true
 }

@@ -10,7 +10,7 @@ type Card struct {
 }
 
 func (c Card) String() string {
-	return fmt.Sprintf("%s%s%v", c.Suit, c.Num, c.LaiZi)
+	return fmt.Sprintf("%s%s", c.Suit, c.Num)
 }
 
 func NewCard(suit SuitType, num NumType, laiZi bool) *Card {
