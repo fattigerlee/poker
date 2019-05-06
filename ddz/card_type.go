@@ -1,28 +1,16 @@
 package ddz
 
-import (
-	"fmt"
-	"sort"
-)
-
-// 牌型
-type CardTypeInfo struct {
-	CardType CardType // 牌型
-	MinValue int      // 最小值
-	MaxValue int      // 最大值
-}
-
-func (c *CardTypeInfo) String() string {
-	return fmt.Sprintf("牌型:%s 最小值:%d 最大值:%d", c.CardType, c.MinValue, c.MaxValue)
-}
-
-type valueList [5][]int // 单张,对子,三张,四张牌的牌值
-type countList [18]int  // 所有牌的数量
+import "sort"
 
 // 获取牌型
-func GetCardType(cards []*Card) (list []*CardTypeInfo) {
-	newCards := getNoLaiZiCards(cards)       // 无癞子牌数组
-	laiZiCount := len(cards) - len(newCards) // 癞子数量
+func GetCardType(cards []*Card, laiZiCards ...NumType) (list []*CardTypeInfo) {
+	if len(laiZiCards) == 0 {
+		// 无癞子算法
+		return analysis(cards)
+	}
+
+	newCards := getCardsWithoutLaiZi(cards, laiZiCards...) // 不是癞子的牌
+	laiZiCount := len(cards) - len(newCards)               // 癞子数量
 
 	if laiZiCount == 0 {
 		// 无癞子算法
@@ -33,67 +21,13 @@ func GetCardType(cards []*Card) (list []*CardTypeInfo) {
 	}
 }
 
-// 牌值计数
-func cardCount(cards []*Card) countList {
-	var count [18]int
-	for _, c := range cards {
-		count[int(c.Num)]++
-	}
-	return count
-}
-
-// 获取非癞子数组
-func getNoLaiZiCards(cards []*Card) []*Card {
-	var newCards []*Card
-
-	for _, c := range cards {
-		if !c.LaiZi {
-			newCards = append(newCards, c)
-		}
-	}
-	return newCards
-}
-
-// 判断牌值是否是大小王
-func isJoker(value int) bool {
-	if value == NumTypeSmallJoker || value == NumTypeBigJoker {
-		return true
-	}
-	return false
-}
-
-// 判断牌值是否是大小王和2
-func isJokerAndTwo(value int) bool {
-	if value == NumTypeSmallJoker || value == NumTypeBigJoker || value == NumTypeTwo {
-		return true
-	}
-	return false
-}
-
 // 无癞子算法
 func analysis(cards []*Card) (list []*CardTypeInfo) {
-	size := len(cards)             // 牌总数量
-	cardsCount := cardCount(cards) // 每张牌数量
-	var value valueList            // 所有单张,对子,三张,四张的牌值
-	var line []int                 // 连牌
-	for i := 3; i < 18; i++ {
-		if cardsCount[i] > 0 {
-			line = append(line, i)
-		}
+	size := len(cards)
+	myCards := convertToMap(cards)
+	_, value, line := getCountValueLine(myCards)
 
-		switch cardsCount[i] {
-		case 1:
-			value[1] = append(value[1], i)
-		case 2:
-			value[2] = append(value[2], i)
-		case 3:
-			value[3] = append(value[3], i)
-		case 4:
-			value[4] = append(value[4], i)
-		}
-	}
-
-	switch len(cards) {
+	switch size {
 	case 1:
 		// 单
 		if info := isDan(size, value); info.CardType != CardTypeNone {
@@ -509,41 +443,12 @@ func isLianZha(size int, value valueList, line []int) (info CardTypeInfo) {
 
 // 癞子算法
 func analysisLaiZi(cards []*Card, newCards []*Card, laiZiCount int) (list []*CardTypeInfo) {
-	size := len(cards)             // 牌总数量
-	cardsCount := cardCount(cards) // 每张牌数量
-	var value valueList            // 所有单张,对子,三张,四张的牌值
-	for i := 3; i < 18; i++ {
-		switch cardsCount[i] {
-		case 1:
-			value[1] = append(value[1], i)
-		case 2:
-			value[2] = append(value[2], i)
-		case 3:
-			value[3] = append(value[3], i)
-		case 4:
-			value[4] = append(value[4], i)
-		}
-	}
+	size := len(cards)
+	myCards := convertToMap(cards)
+	_, value, _ := getCountValueLine(myCards)
 
-	newCardsCount := cardCount(newCards) // 非癞子每张牌数量
-	var newValue valueList               // 所有非癞子单张,对子,三张,四张的牌值
-	var newLine []int                    // 非癞子连牌
-	for i := 3; i < 18; i++ {
-		if newCardsCount[i] > 0 {
-			newLine = append(newLine, i)
-		}
-
-		switch newCardsCount[i] {
-		case 1:
-			newValue[1] = append(newValue[1], i)
-		case 2:
-			newValue[2] = append(newValue[2], i)
-		case 3:
-			newValue[3] = append(newValue[3], i)
-		case 4:
-			newValue[4] = append(newValue[4], i)
-		}
-	}
+	myNewCards := convertToMap(newCards)
+	newCardsCount, newValue, newLine := getCountValueLine(myNewCards)
 
 	// 癞子单
 	if info := isDanLaiZi(size, value); info.CardType != CardTypeNone {

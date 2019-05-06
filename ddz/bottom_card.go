@@ -2,25 +2,8 @@ package ddz
 
 // 底牌牌型判定
 func GetBottomCardType(cards []*Card) BottomCardType {
-	cardsCount := cardCount(cards) // 每张牌数量
-	var value valueList            // 所有单张,对子,三张,四张的牌值
-	var line []int                 // 连牌
-	for i := 3; i < 18; i++ {
-		if cardsCount[i] > 0 {
-			line = append(line, i)
-		}
-
-		switch cardsCount[i] {
-		case 1:
-			value[1] = append(value[1], i)
-		case 2:
-			value[2] = append(value[2], i)
-		case 3:
-			value[3] = append(value[3], i)
-		case 4:
-			value[4] = append(value[4], i)
-		}
-	}
+	myCards := convertToMap(cards)
+	_, value, line := getCountValueLine(myCards)
 
 	if huoJian(value) {
 		return BottomCardTypeHuoJian
