@@ -403,6 +403,12 @@ func findFeiJiDaiYi() {
 	var retInfo ddz.CardTypeInfo
 
 	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeHeart, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
@@ -420,6 +426,14 @@ func findFeiJiDaiYi() {
 	}
 	retCards, retInfo = ddz.FindCards(info, cards)
 	fmt.Println("飞机带一:", retCards, retInfo)
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeFeiJiDaiYi,
+		MinValue: 9,
+		MaxValue: 10,
+	}
+	retCards, retInfo = ddz.FindCards(info, cards)
+	fmt.Println("飞机带一:", retCards, retInfo)
 }
 
 func findFeiJiDaiEr() {
@@ -429,6 +443,12 @@ func findFeiJiDaiEr() {
 	var retInfo ddz.CardTypeInfo
 
 	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
@@ -437,16 +457,24 @@ func findFeiJiDaiEr() {
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
 		ddz.NewCard(ddz.SuitTypeClub, 14),
 		ddz.NewCard(ddz.SuitTypeDiamond, 14),
-		ddz.NewCard(ddz.SuitTypeSpade, 12),
-		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
 		ddz.NewCard(ddz.SuitTypeSpade, 15),
 		ddz.NewCard(ddz.SuitTypeClub, 15),
 	}
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeFeiJiDaiEr,
-		MinValue: 12,
-		MaxValue: 13,
+		MinValue: 7,
+		MaxValue: 8,
+	}
+	retCards, retInfo = ddz.FindCards(info, cards)
+	fmt.Println("飞机带二:", retCards, retInfo)
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeFeiJiDaiEr,
+		MinValue: 7,
+		MaxValue: 9,
 	}
 	retCards, retInfo = ddz.FindCards(info, cards)
 	fmt.Println("飞机带二:", retCards, retInfo)

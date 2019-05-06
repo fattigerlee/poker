@@ -66,14 +66,14 @@ func findCards(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo Car
 		if retCards, retInfo = findBigFeiJiBuDai(size, info, dictCards, count); retInfo.CardType != CardTypeNone {
 			return
 		}
-	//case CardTypeFeiJiDaiYi:
-	//	if ret = findBigFeiJiDaiYi(cards, count, info); len(ret) != 0 {
-	//		return
-	//	}
-	//case CardTypeFeiJiDaiEr:
-	//	if ret = findBigFeiJiDaiEr(cards, count, info); len(ret) != 0 {
-	//		return
-	//	}
+	case CardTypeFeiJiDaiYi:
+		if retCards, retInfo = findBigFeiJiDaiYi(size, info, cards, dictCards, count, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiEr:
+		if retCards, retInfo = findBigFeiJiDaiEr(size, info, cards, dictCards, count, value); retInfo.CardType != CardTypeNone {
+			return
+		}
 	case CardTypeZhaDan:
 		if retCards, retInfo = findBigZhaDan(size, info, dictCards, count, value); retInfo.CardType != CardTypeNone {
 			return
@@ -516,7 +516,7 @@ func findBigFeiJiBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, c
 	// 更大的飞机不带
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		for j := i; j < i+valueRange; j++ {
-			if count[j] > 1 && count[j] < 4 {
+			if count[j] == 3 {
 				for k := 0; k < 3; k++ {
 					nums = append(nums, j)
 				}
@@ -536,8 +536,110 @@ func findBigFeiJiBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, c
 }
 
 // 飞机带一
+func findBigFeiJiDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+	valueRange := info.MaxValue - info.MinValue + 1
+	if size < valueRange*4 {
+		return
+	}
+
+	var nums []int
+
+	// 更大的飞机带一
+	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
+		for j := i; j < i+valueRange; j++ {
+			if count[j] == 3 {
+				for k := 0; k < 3; k++ {
+					nums = append(nums, j)
+				}
+			}
+		}
+
+		if len(nums) == valueRange*3 {
+			retCards = append(retCards, findCardsByNums(dictCards, nums)...)
+			retInfo.CardType = CardTypeFeiJiDaiYi
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[len(nums)-1]
+			break
+		}
+		nums = nums[0:0]
+	}
+
+	if retInfo.CardType == CardTypeNone {
+		return
+	}
+
+	for i := 0; i < valueRange; i++ {
+		_, value, _ = getCountValueLine(dictCards)
+
+		ret := withDan(dictCards, value)
+		if len(ret) == 0 {
+			break
+		}
+		retCards = append(retCards, ret...)
+	}
+
+	// 没有合适的牌
+	if len(retCards) != valueRange*4 {
+		retCards = retCards[0:0]
+		retInfo.Reset()
+		dictCards = convertToMap(cards)
+		_, value, _ = getCountValueLine(dictCards)
+	}
+	return
+}
 
 // 飞机带二
+func findBigFeiJiDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+	valueRange := info.MaxValue - info.MinValue + 1
+	if size < valueRange*5 {
+		return
+	}
+
+	var nums []int
+
+	// 更大的飞机带二
+	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
+		for j := i; j < i+valueRange; j++ {
+			if count[j] == 3 {
+				for k := 0; k < 3; k++ {
+					nums = append(nums, j)
+				}
+			}
+		}
+
+		if len(nums) == valueRange*3 {
+			retCards = append(retCards, findCardsByNums(dictCards, nums)...)
+			retInfo.CardType = CardTypeFeiJiDaiEr
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[len(nums)-1]
+			break
+		}
+		nums = nums[0:0]
+	}
+
+	if retInfo.CardType == CardTypeNone {
+		return
+	}
+
+	for i := 0; i < valueRange; i++ {
+		_, value, _ = getCountValueLine(dictCards)
+
+		ret := withDui(dictCards, value)
+		if len(ret) == 0 {
+			break
+		}
+		retCards = append(retCards, ret...)
+	}
+
+	// 没有合适的牌
+	if len(retCards) != valueRange*5 {
+		retCards = retCards[0:0]
+		retInfo.Reset()
+		dictCards = convertToMap(cards)
+		_, value, _ = getCountValueLine(dictCards)
+	}
+	return
+}
 
 // 炸弹
 func findZhaDan(size int, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
