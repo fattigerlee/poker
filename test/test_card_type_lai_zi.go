@@ -8,29 +8,32 @@ import (
 func main() {
 	laiZiNums := []ddz.NumType{9, 10}
 
-	isDanLaiZi(laiZiNums...)
-	isDuiLaiZi(laiZiNums...)
+	isDanLaiZi(laiZiNums)
+	isDuiLaiZi(laiZiNums)
 
-	isSanBuDaiLaiZi(laiZiNums...)
-	isSanDaiYiLaiZi(laiZiNums...)
-	isSanDaiErLaiZi(laiZiNums...)
+	isSanBuDaiLaiZi(laiZiNums)
+	isSanDaiYiLaiZi(laiZiNums)
+	isSanDaiErLaiZi(laiZiNums)
 
-	isSiDaiDanLaiZi(laiZiNums...)
-	isSiDaiDuiLaiZi(laiZiNums...)
+	isSiDaiDanLaiZi(laiZiNums)
+	isSiDaiDuiLaiZi(laiZiNums)
 
-	isShunZiLaiZi(laiZiNums...)
-	isLianDuiLaiZi(laiZiNums...)
+	isShunZiLaiZi(laiZiNums)
+	isLianDuiLaiZi(laiZiNums)
 
-	isFeiJiBuDaiLaiZi(laiZiNums...)
-	isFeiJiDaiYiLaiZi(laiZiNums...)
-	isFeiJiDaiErLaiZi(laiZiNums...)
+	isFeiJiBuDaiLaiZi(laiZiNums)
+	isFeiJiDaiYiLaiZi(laiZiNums)
+	isFeiJiDaiErLaiZi(laiZiNums)
 
-	isRuanZhaDan4(laiZiNums...)
-	isRuanZhaDan5(laiZiNums...)
-	isRuanLianZhaDan(laiZiNums...)
+	isLaiZiZhaDan4(laiZiNums)
+	isChunLaiZiZhaDan(laiZiNums)
+
+	isRuanZhaDan4(laiZiNums)
+	isRuanZhaDan5(laiZiNums)
+	isRuanLianZhaDan(laiZiNums)
 }
 
-func isDanLaiZi(laiZiNums ...ddz.NumType) {
+func isDanLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -44,7 +47,7 @@ func isDanLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("单:", ddz.GetCardType(cards))
 }
 
-func isDuiLaiZi(laiZiNums ...ddz.NumType) {
+func isDuiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -60,7 +63,7 @@ func isDuiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("对:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isSanBuDaiLaiZi(laiZiNums ...ddz.NumType) {
+func isSanBuDaiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -85,7 +88,7 @@ func isSanBuDaiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("三不带:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isSanDaiYiLaiZi(laiZiNums ...ddz.NumType) {
+func isSanDaiYiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -105,7 +108,7 @@ func isSanDaiYiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("三带一:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isSanDaiErLaiZi(laiZiNums ...ddz.NumType) {
+func isSanDaiErLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -136,7 +139,7 @@ func isSanDaiErLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("三带二:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isSiDaiDanLaiZi(laiZiNums ...ddz.NumType) {
+func isSiDaiDanLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -230,7 +233,7 @@ func isSiDaiDanLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("四带单:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isSiDaiDuiLaiZi(laiZiNums ...ddz.NumType) {
+func isSiDaiDuiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -270,7 +273,7 @@ func isSiDaiDuiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("四带对:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isShunZiLaiZi(laiZiNums ...ddz.NumType) {
+func isShunZiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -313,7 +316,7 @@ func isShunZiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("顺子:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isLianDuiLaiZi(laiZiNums ...ddz.NumType) {
+func isLianDuiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -375,7 +378,7 @@ func isLianDuiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("连对:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isFeiJiBuDaiLaiZi(laiZiNums ...ddz.NumType) {
+func isFeiJiBuDaiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -437,7 +440,7 @@ func isFeiJiBuDaiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("飞机不带:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isFeiJiDaiYiLaiZi(laiZiNums ...ddz.NumType) {
+func isFeiJiDaiYiLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -501,7 +504,7 @@ func isFeiJiDaiYiLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("飞机带一:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isFeiJiDaiErLaiZi(laiZiNums ...ddz.NumType) {
+func isFeiJiDaiErLaiZi(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -533,7 +536,31 @@ func isFeiJiDaiErLaiZi(laiZiNums ...ddz.NumType) {
 	fmt.Println("飞机带二:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isRuanZhaDan4(laiZiNums ...ddz.NumType) {
+func isLaiZiZhaDan4(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeDiamond, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+	}
+	fmt.Println("四癞子炸:", ddz.GetCardType(cards, laiZiNums...))
+}
+
+func isChunLaiZiZhaDan(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeDiamond, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+	}
+	fmt.Println("四纯癞子炸:", ddz.GetCardType(cards, laiZiNums...))
+}
+
+func isRuanZhaDan4(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -561,7 +588,7 @@ func isRuanZhaDan4(laiZiNums ...ddz.NumType) {
 	fmt.Println("四软炸:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isRuanZhaDan5(laiZiNums ...ddz.NumType) {
+func isRuanZhaDan5(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{
@@ -601,7 +628,7 @@ func isRuanZhaDan5(laiZiNums ...ddz.NumType) {
 	fmt.Println("五软炸:", ddz.GetCardType(cards, laiZiNums...))
 }
 
-func isRuanLianZhaDan(laiZiNums ...ddz.NumType) {
+func isRuanLianZhaDan(laiZiNums []ddz.NumType) {
 	var cards []*ddz.Card
 
 	cards = []*ddz.Card{

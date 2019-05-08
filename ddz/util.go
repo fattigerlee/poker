@@ -23,30 +23,6 @@ type countList [18]int  // 每张牌数量
 type valueList [5][]int // 单张,对子,三张,四张牌的牌值
 type lineList []int     // 所有牌的唯一牌值
 
-// 获取不是癞子的牌
-func getCardsWithoutLaiZi(cards []*Card, laiZiNums ...NumType) []*Card {
-	if len(laiZiNums) == 0 {
-		return cards
-	}
-
-	var newCards []*Card
-
-	for _, card := range cards {
-		exist := false
-		for _, num := range laiZiNums {
-			if card.Num == num {
-				exist = true
-				break
-			}
-		}
-
-		if !exist {
-			newCards = append(newCards, card)
-		}
-	}
-	return newCards
-}
-
 // 切片转map
 func convertToMap(cards []*Card) map[*Card]bool {
 	myCards := map[*Card]bool{}

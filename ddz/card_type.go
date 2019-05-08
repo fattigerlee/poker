@@ -3,29 +3,44 @@ package ddz
 import "sort"
 
 // 获取牌型
-func GetCardType(cards []*Card, laiZiCards ...NumType) (list []*CardTypeInfo) {
-	if len(laiZiCards) == 0 {
+func GetCardType(cards []*Card, laiZiNums ...NumType) (list []*CardTypeInfo) {
+	if len(laiZiNums) == 0 {
 		// 无癞子算法
 		return analysis(cards)
 	}
 
-	newCards := getCardsWithoutLaiZi(cards, laiZiCards...) // 不是癞子的牌
-	laiZiCount := len(cards) - len(newCards)               // 癞子数量
+	var normalCards []*Card // 普通牌
+	var laiZiCards []*Card  // 癞子牌
+	for _, c := range cards {
+		var exist bool
+		for _, num := range laiZiNums {
+			if c.Num == num {
+				exist = true
+				break
+			}
+		}
 
-	if laiZiCount == 0 {
+		if exist {
+			laiZiCards = append(laiZiCards, c)
+		} else {
+			normalCards = append(normalCards, c)
+		}
+	}
+
+	if len(laiZiCards) == 0 {
 		// 无癞子算法
 		return analysis(cards)
 	} else {
 		// 癞子算法
-		return analysisLaiZi(cards, newCards, laiZiCount)
+		return analysisLaiZi(cards, normalCards, laiZiCards)
 	}
 }
 
 // 无癞子算法
 func analysis(cards []*Card) (list []*CardTypeInfo) {
 	size := len(cards)
-	myCards := convertToMap(cards)
-	_, value, line := getCountValueLine(myCards)
+	dictCards := convertToMap(cards)
+	_, value, line := getCountValueLine(dictCards)
 
 	switch size {
 	case 1:
@@ -219,7 +234,7 @@ func isSiDaiDui(size int, value valueList) (info CardTypeInfo) {
 }
 
 // 顺子
-func isShunZi(size int, value valueList, line []int) (info CardTypeInfo) {
+func isShunZi(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 5 || size > 12 {
 		return
 	}
@@ -238,7 +253,7 @@ func isShunZi(size int, value valueList, line []int) (info CardTypeInfo) {
 
 	// 必须连续
 	valueRange := line[len(line)-1] - line[0] + 1
-	if valueRange != size {
+	if size != valueRange {
 		return
 	}
 
@@ -249,7 +264,7 @@ func isShunZi(size int, value valueList, line []int) (info CardTypeInfo) {
 }
 
 // 连对
-func isLianDui(size int, value valueList, line []int) (info CardTypeInfo) {
+func isLianDui(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 6 || size%2 != 0 {
 		return
 	}
@@ -268,7 +283,7 @@ func isLianDui(size int, value valueList, line []int) (info CardTypeInfo) {
 
 	// 必须连续
 	valueRange := line[len(line)-1] - line[0] + 1
-	if valueRange != size/2 {
+	if size != valueRange*2 {
 		return
 	}
 
@@ -279,7 +294,7 @@ func isLianDui(size int, value valueList, line []int) (info CardTypeInfo) {
 }
 
 // 飞机不带
-func isFeiJiBuDai(size int, value valueList, line []int) (info CardTypeInfo) {
+func isFeiJiBuDai(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 6 || size%3 != 0 {
 		return
 	}
@@ -298,7 +313,7 @@ func isFeiJiBuDai(size int, value valueList, line []int) (info CardTypeInfo) {
 
 	// 必须连续
 	valueRange := line[len(line)-1] - line[0] + 1
-	if valueRange != size/3 {
+	if size != valueRange*3 {
 		return
 	}
 
@@ -309,7 +324,7 @@ func isFeiJiBuDai(size int, value valueList, line []int) (info CardTypeInfo) {
 }
 
 // 飞机带一
-func isFeiJiDaiYi(size int, value valueList, line []int) (info CardTypeInfo) {
+func isFeiJiDaiYi(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 8 || size%4 != 0 {
 		return
 	}
@@ -321,38 +336,39 @@ func isFeiJiDaiYi(size int, value valueList, line []int) (info CardTypeInfo) {
 	}
 
 	// 统计所有的三张和四张
-	var newLine []int
+	var normalLine []int
 	for _, v := range value[3] {
 		if isJokerAndTwo(v) {
 			continue
 		}
-		newLine = append(newLine, v)
+		normalLine = append(normalLine, v)
 	}
 
 	for _, v := range value[4] {
 		if isJokerAndTwo(v) {
 			continue
 		}
-		newLine = append(newLine, v)
+		normalLine = append(normalLine, v)
 	}
 
-	if len(newLine) != size/4 {
+	if size != len(normalLine)*4 {
 		return
 	}
 
-	sort.Slice(newLine, func(i, j int) bool {
-		return newLine[i] < newLine[j]
+	// 排序
+	sort.Slice(normalLine, func(i, j int) bool {
+		return normalLine[i] < normalLine[j]
 	})
 
 	// 必须连续
-	valueRange := newLine[len(newLine)-1] - newLine[0] + 1
-	if valueRange != size/4 {
+	valueRange := normalLine[len(normalLine)-1] - normalLine[0] + 1
+	if size != valueRange*4 {
 		return
 	}
 
 	info.CardType = CardTypeFeiJiDaiYi
-	info.MinValue = newLine[0]
-	info.MaxValue = newLine[len(newLine)-1]
+	info.MinValue = normalLine[0]
+	info.MaxValue = normalLine[len(normalLine)-1]
 	return
 }
 
@@ -376,7 +392,7 @@ func isFeiJiDaiEr(size int, value valueList, line []int) (info CardTypeInfo) {
 
 	// 必须连续
 	valueRange := value[3][len(value[3])-1] - value[3][0] + 1
-	if valueRange != size/5 {
+	if size != valueRange*5 {
 		return
 	}
 
@@ -412,7 +428,7 @@ func isHuoJian(size int, value valueList) (info CardTypeInfo) {
 }
 
 // 连炸
-func isLianZha(size int, value valueList, line []int) (info CardTypeInfo) {
+func isLianZha(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 8 || size%4 != 0 {
 		return
 	}
@@ -442,13 +458,15 @@ func isLianZha(size int, value valueList, line []int) (info CardTypeInfo) {
 }
 
 // 癞子算法
-func analysisLaiZi(cards []*Card, newCards []*Card, laiZiCount int) (list []*CardTypeInfo) {
+func analysisLaiZi(cards []*Card, normalCards []*Card, laiZiCards []*Card) (list []*CardTypeInfo) {
 	size := len(cards)
-	myCards := convertToMap(cards)
-	_, value, _ := getCountValueLine(myCards)
+	laiZiSize := len(laiZiCards)
 
-	myNewCards := convertToMap(newCards)
-	newCardsCount, newValue, newLine := getCountValueLine(myNewCards)
+	dictCards := convertToMap(cards)
+	_, value, _ := getCountValueLine(dictCards)
+
+	normalDictCards := convertToMap(normalCards)
+	normalCount, normalValue, normalLine := getCountValueLine(normalDictCards)
 
 	// 癞子单
 	if info := isDanLaiZi(size, value); info.CardType != CardTypeNone {
@@ -456,77 +474,77 @@ func analysisLaiZi(cards []*Card, newCards []*Card, laiZiCount int) (list []*Car
 	}
 
 	// 癞子对
-	if info := isDuiLaiZi(size, value, newLine); info.CardType != CardTypeNone {
+	if info := isDuiLaiZi(size, value, normalLine); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 
 	// 癞子三不带
-	if info := isSanBuDaiLaiZi(size, value, newLine); info.CardType != CardTypeNone {
+	if info := isSanBuDaiLaiZi(size, value, normalLine); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 
 	// 癞子三带一
-	if infoList := isSanDaiYiLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isSanDaiYiLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子三带二
-	if infoList := isSanDaiErLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isSanDaiErLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子四带单
-	if infoList := isSiDaiDanLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isSiDaiDanLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子四带对
-	if infoList := isSiDaiDuiLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isSiDaiDuiLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子顺子
-	if infoList := isLianLaiZi(CardTypeShunZi, size, newValue, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isLianLaiZi(CardTypeShunZi, size, normalValue, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子连对
-	if infoList := isLianLaiZi(CardTypeLianDui, size, newValue, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isLianLaiZi(CardTypeLianDui, size, normalValue, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子飞机不带
-	if infoList := isLianLaiZi(CardTypeFeiJiBuDai, size, newValue, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isLianLaiZi(CardTypeFeiJiBuDai, size, normalValue, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子飞机带一
-	if infoList := isFeiJiDaiYiLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isFeiJiDaiYiLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 癞子飞机带二
-	if infoList := isFeiJiDaiErLaiZi(size, newCardsCount, newLine, laiZiCount); len(infoList) != 0 {
+	if infoList := isFeiJiDaiErLaiZi(size, normalCount, normalLine, laiZiSize); len(infoList) != 0 {
 		list = append(list, infoList...)
 	}
 
 	// 四纯癞子炸
-	if info := isChunLaiZiZhaDan(size, value, newLine); info.CardType != CardTypeNone {
+	if info := isChunLaiZiZhaDan(size, laiZiSize, laiZiCards); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 
 	// 软炸
-	if info := isRuanZhaDan(size, newLine); info.CardType != CardTypeNone {
+	if info := isRuanZhaDan(size, normalLine); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 
 	// 癞子炸
-	if info := isLaiZiZhaDan(size, newLine); info.CardType != CardTypeNone {
+	if info := isLaiZiZhaDan(size, laiZiSize, laiZiCards); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 
 	// 软连炸
-	if info := isRuanLianZha(size, newCardsCount, newLine, laiZiCount); info.CardType != CardTypeNone {
+	if info := isRuanLianZha(size, normalCount, normalLine, laiZiSize); info.CardType != CardTypeNone {
 		list = append(list, &info)
 	}
 	return
@@ -544,13 +562,13 @@ func isDanLaiZi(size int, value valueList) (info CardTypeInfo) {
 }
 
 // 癞子对
-func isDuiLaiZi(size int, value valueList, newLine []int) (info CardTypeInfo) {
+func isDuiLaiZi(size int, value valueList, normalLine lineList) (info CardTypeInfo) {
 	if size != 2 {
 		return
 	}
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0:
 		if len(value[2]) != 1 {
 			return
@@ -560,24 +578,24 @@ func isDuiLaiZi(size int, value valueList, newLine []int) (info CardTypeInfo) {
 		info.MinValue = value[2][0]
 
 	case 1:
-		if isJoker(newLine[0]) {
+		if isJoker(normalLine[0]) {
 			return
 		}
 
 		info.CardType = CardTypeDui
-		info.MinValue = newLine[0]
+		info.MinValue = normalLine[0]
 	}
 	return
 }
 
 // 癞子三不带
-func isSanBuDaiLaiZi(size int, value valueList, newLine []int) (info CardTypeInfo) {
+func isSanBuDaiLaiZi(size int, value valueList, normalLine lineList) (info CardTypeInfo) {
 	if size != 3 {
 		return
 	}
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0:
 		if len(value[3]) != 1 {
 			return
@@ -587,18 +605,18 @@ func isSanBuDaiLaiZi(size int, value valueList, newLine []int) (info CardTypeInf
 		info.MinValue = value[3][0]
 
 	case 1:
-		if isJoker(newLine[0]) {
+		if isJoker(normalLine[0]) {
 			return
 		}
 
 		info.CardType = CardTypeSanBuDai
-		info.MinValue = newLine[0]
+		info.MinValue = normalLine[0]
 	}
 	return
 }
 
 // 癞子三带一
-func isSanDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isSanDaiYiLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size != 4 {
 		return
 	}
@@ -607,10 +625,10 @@ func isSanDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 	var max CardTypeInfo // 最大值
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 2:
 		var line []int
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJoker(v) {
 				continue
 			}
@@ -621,8 +639,8 @@ func isSanDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 			return
 		}
 
-		min = minSanDaiYiLaiZi(newCardsCount, line, laiZiCount)
-		max = maxSanDaiYiLaiZi(newCardsCount, line, laiZiCount)
+		min = minSanDaiYiLaiZi(normalCount, line, laiZiSize)
+		max = maxSanDaiYiLaiZi(normalCount, line, laiZiSize)
 
 	default:
 		return
@@ -641,9 +659,9 @@ func isSanDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 }
 
 // 最小癞子三带一
-func minSanDaiYiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func minSanDaiYiLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	for i := 0; i < len(line); i++ {
-		info = sanDaiYiLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = sanDaiYiLaiZi(line[i], normalCount, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -652,9 +670,9 @@ func minSanDaiYiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 最大癞子三带一
-func maxSanDaiYiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func maxSanDaiYiLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	for i := len(line) - 1; i >= 0; i-- {
-		info = sanDaiYiLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = sanDaiYiLaiZi(line[i], normalCount, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -663,11 +681,11 @@ func maxSanDaiYiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 癞子三带一结果
-func sanDaiYiLaiZi(value int, newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func sanDaiYiLaiZi(value int, normalCount countList, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补三张
-	switch newCardsCount[value] {
+	switch normalCount[value] {
 	case 0:
 		laiZi += 3
 	case 1:
@@ -676,7 +694,7 @@ func sanDaiYiLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 		laiZi += 1
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 
@@ -686,7 +704,7 @@ func sanDaiYiLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 }
 
 // 癞子三带二
-func isSanDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isSanDaiErLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size != 5 {
 		return
 	}
@@ -695,16 +713,16 @@ func isSanDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 	var max CardTypeInfo // 最大值
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 2:
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJoker(v) {
 				return
 			}
 		}
 
-		min = minSanDaiErLaiZi(newCardsCount, newLine, laiZiCount)
-		max = maxSanDaiErLaiZi(newCardsCount, newLine, laiZiCount)
+		min = minSanDaiErLaiZi(normalCount, normalLine, laiZiSize)
+		max = maxSanDaiErLaiZi(normalCount, normalLine, laiZiSize)
 
 	default:
 		return
@@ -723,9 +741,9 @@ func isSanDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 }
 
 // 最小癞子三带二
-func minSanDaiErLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func minSanDaiErLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	for i := 0; i < len(line); i++ {
-		info = sanDaiErLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = sanDaiErLaiZi(line[i], normalCount, line, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -734,9 +752,9 @@ func minSanDaiErLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 最大癞子三带二
-func maxSanDaiErLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func maxSanDaiErLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	for i := len(line) - 1; i >= 0; i-- {
-		info = sanDaiErLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = sanDaiErLaiZi(line[i], normalCount, line, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -745,11 +763,11 @@ func maxSanDaiErLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 癞子三带二结果
-func sanDaiErLaiZi(value int, newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func sanDaiErLaiZi(value int, normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补三张
-	switch newCardsCount[value] {
+	switch normalCount[value] {
 	case 0:
 		laiZi += 3
 	case 1:
@@ -758,7 +776,7 @@ func sanDaiErLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 		laiZi += 1
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 
@@ -768,14 +786,14 @@ func sanDaiErLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 			continue
 		}
 
-		switch newCardsCount[v] {
+		switch normalCount[v] {
 		case 0:
 			laiZi += 2
 		case 1:
 			laiZi += 1
 		}
 
-		if laiZi > laiZiCount {
+		if laiZi > laiZiSize {
 			return
 		}
 	}
@@ -786,7 +804,7 @@ func sanDaiErLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 }
 
 // 癞子四带单
-func isSiDaiDanLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isSiDaiDanLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size != 6 {
 		return
 	}
@@ -795,21 +813,21 @@ func isSiDaiDanLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 	var max CardTypeInfo // 最大值
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0, 1:
 		return
 
 	default:
 		var line []int
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJoker(v) {
 				continue
 			}
 			line = append(line, v)
 		}
 
-		min = minSiDaiDanLaiZi(newCardsCount, line, laiZiCount)
-		max = maxSiDaiDanLaiZi(newCardsCount, line, laiZiCount)
+		min = minSiDaiDanLaiZi(normalCount, line, laiZiSize)
+		max = maxSiDaiDanLaiZi(normalCount, line, laiZiSize)
 	}
 
 	if min.CardType == CardTypeNone && max.CardType == CardTypeNone {
@@ -825,9 +843,9 @@ func isSiDaiDanLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 }
 
 // 最小癞子四带单
-func minSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func minSiDaiDanLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	// 最小值为3
-	info = siDaiDanLaiZi(NumTypeThree, newCardsCount, laiZiCount)
+	info = siDaiDanLaiZi(NumTypeThree, normalCount, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -837,7 +855,7 @@ func minSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 			continue
 		}
 
-		info = siDaiDanLaiZi(line[i], newCardsCount, laiZiCount)
+		info = siDaiDanLaiZi(line[i], normalCount, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -846,9 +864,9 @@ func minSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 最大癞子四带单
-func maxSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func maxSiDaiDanLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	// 最大值为2
-	info = siDaiDanLaiZi(NumTypeTwo, newCardsCount, laiZiCount)
+	info = siDaiDanLaiZi(NumTypeTwo, normalCount, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -858,7 +876,7 @@ func maxSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 			continue
 		}
 
-		info = siDaiDanLaiZi(line[i], newCardsCount, laiZiCount)
+		info = siDaiDanLaiZi(line[i], normalCount, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -867,11 +885,11 @@ func maxSiDaiDanLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 癞子四带单结果
-func siDaiDanLaiZi(value int, newCardsCount countList, laiZiCount int) (info CardTypeInfo) {
+func siDaiDanLaiZi(value int, normalCount countList, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补四张
-	switch newCardsCount[value] {
+	switch normalCount[value] {
 	case 0:
 		laiZi += 4
 	case 1:
@@ -882,7 +900,7 @@ func siDaiDanLaiZi(value int, newCardsCount countList, laiZiCount int) (info Car
 		laiZi += 1
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 
@@ -892,7 +910,7 @@ func siDaiDanLaiZi(value int, newCardsCount countList, laiZiCount int) (info Car
 }
 
 // 癞子四带对
-func isSiDaiDuiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isSiDaiDuiLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size != 8 {
 		return
 	}
@@ -901,19 +919,19 @@ func isSiDaiDuiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 	var max CardTypeInfo // 最大值
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0, 1:
 		return
 
 	default:
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJoker(v) {
 				return
 			}
 		}
 
-		min = minSiDaiDuiLaiZi(newCardsCount, newLine, laiZiCount)
-		max = maxSiDaiDuiLaiZi(newCardsCount, newLine, laiZiCount)
+		min = minSiDaiDuiLaiZi(normalCount, normalLine, laiZiSize)
+		max = maxSiDaiDuiLaiZi(normalCount, normalLine, laiZiSize)
 	}
 
 	if min.CardType == CardTypeNone && max.CardType == CardTypeNone {
@@ -929,9 +947,9 @@ func isSiDaiDuiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCoun
 }
 
 // 最小癞子四带对
-func minSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func minSiDaiDuiLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	// 最小值为3
-	info = siDaiDuiLaiZi(NumTypeThree, newCardsCount, line, laiZiCount)
+	info = siDaiDuiLaiZi(NumTypeThree, normalCount, line, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -941,7 +959,7 @@ func minSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 			continue
 		}
 
-		info = siDaiDuiLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = siDaiDuiLaiZi(line[i], normalCount, line, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -950,9 +968,9 @@ func minSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 最大癞子四带对
-func maxSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func maxSiDaiDuiLaiZi(normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	// 最大值为2
-	info = siDaiDuiLaiZi(NumTypeTwo, newCardsCount, line, laiZiCount)
+	info = siDaiDuiLaiZi(NumTypeTwo, normalCount, line, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -962,7 +980,7 @@ func maxSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 			continue
 		}
 
-		info = siDaiDuiLaiZi(line[i], newCardsCount, line, laiZiCount)
+		info = siDaiDuiLaiZi(line[i], normalCount, line, laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -971,11 +989,11 @@ func maxSiDaiDuiLaiZi(newCardsCount countList, line []int, laiZiCount int) (info
 }
 
 // 癞子四带对结果
-func siDaiDuiLaiZi(value int, newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func siDaiDuiLaiZi(value int, normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补四张
-	switch newCardsCount[value] {
+	switch normalCount[value] {
 	case 0:
 		laiZi += 4
 	case 1:
@@ -986,7 +1004,7 @@ func siDaiDuiLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 		laiZi += 1
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 
@@ -996,14 +1014,14 @@ func siDaiDuiLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 			continue
 		}
 
-		switch newCardsCount[v] {
+		switch normalCount[v] {
 		case 0:
 			laiZi += 2
 		case 1:
 			laiZi += 1
 		}
 
-		if laiZi > laiZiCount {
+		if laiZi > laiZiSize {
 			return
 		}
 	}
@@ -1014,7 +1032,7 @@ func siDaiDuiLaiZi(value int, newCardsCount countList, line []int, laiZiCount in
 }
 
 // 癞子连牌(顺子,连对,飞机不带)
-func isLianLaiZi(cardType CardType, size int, newValue valueList, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isLianLaiZi(cardType CardType, size int, normalValue valueList, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	var min CardTypeInfo // 最小值
 	var max CardTypeInfo // 最大值
 
@@ -1026,7 +1044,7 @@ func isLianLaiZi(cardType CardType, size int, newValue valueList, newCardsCount 
 		}
 
 		// 非癞子牌只能有单张
-		if len(newValue[2]) != 0 || len(newValue[3]) != 0 || len(newValue[4]) != 0 {
+		if len(normalValue[2]) != 0 || len(normalValue[3]) != 0 || len(normalValue[4]) != 0 {
 			return
 		}
 
@@ -1037,7 +1055,7 @@ func isLianLaiZi(cardType CardType, size int, newValue valueList, newCardsCount 
 		}
 
 		// 非癞子牌只能有单张和对子
-		if len(newValue[3]) != 0 || len(newValue[4]) != 0 {
+		if len(normalValue[3]) != 0 || len(normalValue[4]) != 0 {
 			return
 		}
 
@@ -1048,28 +1066,28 @@ func isLianLaiZi(cardType CardType, size int, newValue valueList, newCardsCount 
 		}
 
 		// 非癞子牌只能有单张和对子和三张
-		if len(newValue[4]) != 0 {
+		if len(normalValue[4]) != 0 {
 			return
 		}
 	}
 
 	// 非癞子牌有多少种牌值
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0, 1:
 		return
 
 	default:
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJokerAndTwo(v) {
 				return
 			}
 		}
 
 		// 最小值
-		min = lianLaiZi(ResultTypeMin, cardType, newCardsCount, newLine, laiZiCount)
+		min = lianLaiZi(ResultTypeMin, cardType, normalCount, normalLine, laiZiSize)
 
 		// 最大值
-		max = lianLaiZi(ResultTypeMax, cardType, newCardsCount, newLine, laiZiCount)
+		max = lianLaiZi(ResultTypeMax, cardType, normalCount, normalLine, laiZiSize)
 	}
 
 	if min.CardType == CardTypeNone && max.CardType == CardTypeNone {
@@ -1085,12 +1103,12 @@ func isLianLaiZi(cardType CardType, size int, newValue valueList, newCardsCount 
 }
 
 // 连癞子
-func lianLaiZi(resultType ResultType, cardType CardType, newCardsCount countList, line []int, laiZiCount int) (info CardTypeInfo) {
+func lianLaiZi(resultType ResultType, cardType CardType, normalCount countList, line lineList, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补牌
 	for i := line[0]; i <= line[len(line)-1]; i++ {
-		switch newCardsCount[i] {
+		switch normalCount[i] {
 		case 0:
 			switch cardType {
 			case CardTypeShunZi:
@@ -1115,13 +1133,13 @@ func lianLaiZi(resultType ResultType, cardType CardType, newCardsCount countList
 		}
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 
 	// 处理多余的癞子
 	var laiZiGroup int
-	limitLaiZi := laiZiCount - laiZi
+	limitLaiZi := laiZiSize - laiZi
 	switch cardType {
 	case CardTypeShunZi:
 		laiZiGroup = limitLaiZi
@@ -1174,7 +1192,7 @@ func lianLaiZi(resultType ResultType, cardType CardType, newCardsCount countList
 }
 
 // 癞子飞机带一
-func isFeiJiDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isFeiJiDaiYiLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size < 8 || size%4 != 0 {
 		return
 	}
@@ -1183,13 +1201,13 @@ func isFeiJiDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 	var max CardTypeInfo   // 最大值
 	valueRange := size / 4 // 几飞机
 
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0, 1:
 		return
 
 	default:
 		var line []int // 去除2和大小王的值
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJokerAndTwo(v) {
 				continue
 			}
@@ -1197,10 +1215,10 @@ func isFeiJiDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 		}
 
 		// 最小值
-		min = minFeiJiDaiYiLaiZi(newCardsCount, line, valueRange, laiZiCount)
+		min = minFeiJiDaiYiLaiZi(normalCount, line, valueRange, laiZiSize)
 
 		// 最大值
-		max = maxFeiJiDaiYiLaiZi(newCardsCount, line, valueRange, laiZiCount)
+		max = maxFeiJiDaiYiLaiZi(normalCount, line, valueRange, laiZiSize)
 	}
 
 	if min.CardType == CardTypeNone && max.CardType == CardTypeNone {
@@ -1216,9 +1234,9 @@ func isFeiJiDaiYiLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 }
 
 // 最小癞子飞机带一
-func minFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, laiZiCount int) (info CardTypeInfo) {
+func minFeiJiDaiYiLaiZi(normalCount countList, line lineList, valueRange int, laiZiSize int) (info CardTypeInfo) {
 	// 最小值为3的飞机
-	info = feiJiDaiYiLaiZi(newCardsCount, NumTypeThree, NumTypeThree+valueRange-1, laiZiCount)
+	info = feiJiDaiYiLaiZi(normalCount, NumTypeThree, NumTypeThree+valueRange-1, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -1230,7 +1248,7 @@ func minFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, lai
 			continue
 		}
 
-		info = feiJiDaiYiLaiZi(newCardsCount, min, line[i], laiZiCount)
+		info = feiJiDaiYiLaiZi(normalCount, min, line[i], laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -1239,9 +1257,9 @@ func minFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, lai
 }
 
 // 最大癞子飞机带一
-func maxFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, laiZiCount int) (info CardTypeInfo) {
+func maxFeiJiDaiYiLaiZi(normalCount countList, line lineList, valueRange int, laiZiSize int) (info CardTypeInfo) {
 	// 最大值为A的飞机
-	info = feiJiDaiYiLaiZi(newCardsCount, NumTypeAce-valueRange+1, NumTypeAce, laiZiCount)
+	info = feiJiDaiYiLaiZi(normalCount, NumTypeAce-valueRange+1, NumTypeAce, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -1254,12 +1272,12 @@ func maxFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, lai
 
 		min := line[i] - valueRange + 1
 		if min <= NumTypeThree {
-			info = feiJiDaiYiLaiZi(newCardsCount, NumTypeThree, NumTypeThree+valueRange-1, laiZiCount)
+			info = feiJiDaiYiLaiZi(normalCount, NumTypeThree, NumTypeThree+valueRange-1, laiZiSize)
 			if info.CardType != CardTypeNone {
 				return
 			}
 		} else {
-			info = feiJiDaiYiLaiZi(newCardsCount, min, line[i], laiZiCount)
+			info = feiJiDaiYiLaiZi(normalCount, min, line[i], laiZiSize)
 			if info.CardType != CardTypeNone {
 				return
 			}
@@ -1269,12 +1287,12 @@ func maxFeiJiDaiYiLaiZi(newCardsCount countList, line []int, valueRange int, lai
 }
 
 // 癞子飞机带一结果
-func feiJiDaiYiLaiZi(newCardsCount countList, min int, max int, laiZiCount int) (info CardTypeInfo) {
+func feiJiDaiYiLaiZi(normalCount countList, min int, max int, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补飞机
 	for i := min; i <= max; i++ {
-		switch newCardsCount[i] {
+		switch normalCount[i] {
 		case 0:
 			laiZi += 3
 		case 1:
@@ -1284,7 +1302,7 @@ func feiJiDaiYiLaiZi(newCardsCount countList, min int, max int, laiZiCount int) 
 		}
 	}
 
-	if laiZi > laiZiCount {
+	if laiZi > laiZiSize {
 		return
 	}
 	info.CardType = CardTypeFeiJiDaiYi
@@ -1294,7 +1312,7 @@ func feiJiDaiYiLaiZi(newCardsCount countList, min int, max int, laiZiCount int) 
 }
 
 // 癞子飞机带二
-func isFeiJiDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCount int) (list []*CardTypeInfo) {
+func isFeiJiDaiErLaiZi(size int, normalCount countList, normalLine lineList, laiZiSize int) (list []*CardTypeInfo) {
 	if size < 10 || size%5 != 0 {
 		return
 	}
@@ -1303,20 +1321,20 @@ func isFeiJiDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 	var max CardTypeInfo   // 最大值
 	valueRange := size / 5 // 几飞机
 
-	switch len(newLine) {
+	switch len(normalLine) {
 	case 0, 1:
 		return
 
 	default:
 		// 不能有大小王
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJoker(v) {
 				return
 			}
 		}
 
 		var line []int // 去除2
-		for _, v := range newLine {
+		for _, v := range normalLine {
 			if isJokerAndTwo(v) {
 				continue
 			}
@@ -1324,10 +1342,10 @@ func isFeiJiDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 		}
 
 		// 最小值
-		min = minFeiJiDaiErLaiZi(newCardsCount, line, newLine, valueRange, laiZiCount)
+		min = minFeiJiDaiErLaiZi(normalCount, line, normalLine, valueRange, laiZiSize)
 
 		// 最大值
-		max = maxFeiJiDaiErLaiZi(newCardsCount, line, newLine, valueRange, laiZiCount)
+		max = maxFeiJiDaiErLaiZi(normalCount, line, normalLine, valueRange, laiZiSize)
 	}
 
 	if min.CardType == CardTypeNone && max.CardType == CardTypeNone {
@@ -1343,9 +1361,9 @@ func isFeiJiDaiErLaiZi(size int, newCardsCount countList, newLine []int, laiZiCo
 }
 
 // 最小癞子飞机带二
-func minFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valueRange int, laiZiCount int) (info CardTypeInfo) {
+func minFeiJiDaiErLaiZi(normalCount countList, line lineList, normalLine lineList, valueRange int, laiZiSize int) (info CardTypeInfo) {
 	// 最小值为3的飞机
-	info = feiJiDaiErLaiZi(newCardsCount, newLine, NumTypeThree, NumTypeThree+valueRange-1, laiZiCount)
+	info = feiJiDaiErLaiZi(normalCount, normalLine, NumTypeThree, NumTypeThree+valueRange-1, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -1357,7 +1375,7 @@ func minFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valu
 			continue
 		}
 
-		info = feiJiDaiErLaiZi(newCardsCount, newLine, min, line[i], laiZiCount)
+		info = feiJiDaiErLaiZi(normalCount, normalLine, min, line[i], laiZiSize)
 		if info.CardType != CardTypeNone {
 			return
 		}
@@ -1366,9 +1384,9 @@ func minFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valu
 }
 
 // 最大癞子飞机带二
-func maxFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valueRange int, laiZiCount int) (info CardTypeInfo) {
+func maxFeiJiDaiErLaiZi(normalCount countList, line lineList, normalLine lineList, valueRange int, laiZiSize int) (info CardTypeInfo) {
 	// 最大值为A的飞机
-	info = feiJiDaiErLaiZi(newCardsCount, newLine, NumTypeAce-valueRange+1, NumTypeAce, laiZiCount)
+	info = feiJiDaiErLaiZi(normalCount, normalLine, NumTypeAce-valueRange+1, NumTypeAce, laiZiSize)
 	if info.CardType != CardTypeNone {
 		return
 	}
@@ -1381,12 +1399,12 @@ func maxFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valu
 
 		min := line[i] - valueRange + 1
 		if min <= NumTypeThree {
-			info = feiJiDaiErLaiZi(newCardsCount, newLine, NumTypeThree, NumTypeThree+valueRange-1, laiZiCount)
+			info = feiJiDaiErLaiZi(normalCount, normalLine, NumTypeThree, NumTypeThree+valueRange-1, laiZiSize)
 			if info.CardType != CardTypeNone {
 				return
 			}
 		} else {
-			info = feiJiDaiErLaiZi(newCardsCount, newLine, min, line[i], laiZiCount)
+			info = feiJiDaiErLaiZi(normalCount, normalLine, min, line[i], laiZiSize)
 			if info.CardType != CardTypeNone {
 				return
 			}
@@ -1396,12 +1414,12 @@ func maxFeiJiDaiErLaiZi(newCardsCount countList, line []int, newLine []int, valu
 }
 
 // 癞子飞机带二结果
-func feiJiDaiErLaiZi(newCardsCount countList, newLine []int, min int, max int, laiZiCount int) (info CardTypeInfo) {
+func feiJiDaiErLaiZi(normalCount countList, normalLine lineList, min int, max int, laiZiSize int) (info CardTypeInfo) {
 	var laiZi int
 
 	// 补飞机
 	for i := min; i <= max; i++ {
-		switch newCardsCount[i] {
+		switch normalCount[i] {
 		case 0:
 			laiZi += 3
 		case 1:
@@ -1410,13 +1428,13 @@ func feiJiDaiErLaiZi(newCardsCount countList, newLine []int, min int, max int, l
 			laiZi += 1
 		}
 
-		if laiZi > laiZiCount {
+		if laiZi > laiZiSize {
 			return
 		}
 	}
 
 	// 补对子
-	for _, v := range newLine {
+	for _, v := range normalLine {
 		var exist bool
 		for i := min; i <= max; i++ {
 			if v == i {
@@ -1429,14 +1447,14 @@ func feiJiDaiErLaiZi(newCardsCount countList, newLine []int, min int, max int, l
 			continue
 		}
 
-		switch newCardsCount[v] {
+		switch normalCount[v] {
 		case 0:
 			laiZi += 2
 		case 1:
 			laiZi += 1
 		}
 
-		if laiZi > laiZiCount {
+		if laiZi > laiZiSize {
 			return
 		}
 	}
@@ -1448,12 +1466,12 @@ func feiJiDaiErLaiZi(newCardsCount countList, newLine []int, min int, max int, l
 }
 
 // 软炸
-func isRuanZhaDan(size int, newLine []int) (info CardTypeInfo) {
-	if len(newLine) != 1 {
+func isRuanZhaDan(size int, normalLine lineList) (info CardTypeInfo) {
+	if len(normalLine) != 1 {
 		return
 	}
 
-	if isJoker(newLine[0]) {
+	if isJoker(normalLine[0]) {
 		return
 	}
 
@@ -1490,38 +1508,40 @@ func isRuanZhaDan(size int, newLine []int) (info CardTypeInfo) {
 		return
 	}
 
-	info.MinValue = newLine[0]
+	info.MinValue = normalLine[0]
 	return
 }
 
 // 四纯癞子炸
-func isChunLaiZiZhaDan(size int, value valueList, newLine []int) (info CardTypeInfo) {
-	if size != 4 {
+func isChunLaiZiZhaDan(size int, laiZiSize int, laiZiCards []*Card) (info CardTypeInfo) {
+	if size != 4 || laiZiSize != 4 {
 		return
 	}
 
-	if len(newLine) != 0 {
-		return
-	}
+	laiZiDictCards := convertToMap(laiZiCards)
+	_, _, laiZiLine := getCountValueLine(laiZiDictCards)
 
-	if len(value[4]) != 1 {
-		return
+	if len(laiZiLine) == 1 {
+		info.CardType = CardTypeChunLaiZiZhaDan
+		info.MinValue = laiZiLine[0]
 	}
-
-	info.CardType = CardTypeChunLaiZiZhaDan
-	info.MinValue = value[4][0]
 	return
 }
 
 // 癞子炸
-func isLaiZiZhaDan(size int, newLine []int) (info CardTypeInfo) {
-	if len(newLine) != 0 {
+func isLaiZiZhaDan(size int, laiZiSize int, laiZiCards []*Card) (info CardTypeInfo) {
+	if size != laiZiSize {
 		return
 	}
 
 	switch size {
 	case 4:
-		info.CardType = CardTypeLaiZiZhaDan4
+		laiZiDictCards := convertToMap(laiZiCards)
+		_, _, laiZiLine := getCountValueLine(laiZiDictCards)
+
+		if len(laiZiLine) != 1 {
+			info.CardType = CardTypeLaiZiZhaDan4
+		}
 
 	case 5:
 		info.CardType = CardTypeLaiZiZhaDan5
@@ -1543,13 +1563,13 @@ func isLaiZiZhaDan(size int, newLine []int) (info CardTypeInfo) {
 }
 
 // 软连炸
-func isRuanLianZha(size int, newCardsCount countList, newLine []int, laiZiCount int) (info CardTypeInfo) {
+func isRuanLianZha(size int, normalCount countList, normalLine lineList, laiZiSize int) (info CardTypeInfo) {
 	if size < 8 || size%4 != 0 {
 		return
 	}
 
 	// 不能有2和大小王
-	for _, v := range newLine {
+	for _, v := range normalLine {
 		if isJokerAndTwo(v) {
 			return
 		}
@@ -1558,8 +1578,8 @@ func isRuanLianZha(size int, newCardsCount countList, newLine []int, laiZiCount 
 	var laiZi int
 
 	// 补牌
-	for i := newLine[0]; i <= newLine[len(newLine)-1]; i++ {
-		switch newCardsCount[i] {
+	for i := normalLine[0]; i <= normalLine[len(normalLine)-1]; i++ {
+		switch normalCount[i] {
 		case 0:
 			laiZi += 4
 		case 1:
@@ -1570,13 +1590,13 @@ func isRuanLianZha(size int, newCardsCount countList, newLine []int, laiZiCount 
 			laiZi += 1
 		}
 
-		if laiZi > laiZiCount {
+		if laiZi > laiZiSize {
 			return
 		}
 	}
 
 	info.CardType = CardTypeRuanLianZha
-	info.MinValue = newLine[0]
-	info.MaxValue = newLine[len(newLine)-1]
+	info.MinValue = normalLine[0]
+	info.MaxValue = normalLine[len(normalLine)-1]
 	return
 }
