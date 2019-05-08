@@ -931,7 +931,7 @@ func findCardsLaiZi(info *CardTypeInfo, cards []*Card, normalCards []*Card, laiZ
 			return
 		}
 	}
-	return findZhaDanMore(size, laiZiSize, info, normalDictCards, normalCount, normalValue, laiZiCards)
+	return findZhaDanMore(size, laiZiSize, info, cards, normalDictCards, normalCount, normalValue, laiZiCards)
 }
 
 // 癞子单张
@@ -3174,6 +3174,13 @@ func findZhaDanMore(size int, laiZiSize int, info *CardTypeInfo, normalDictCards
 	if info.CardType < CardTypeHuoJian {
 		// 火箭
 		if retCards, retInfo = findHuoJian(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+
+		// 双王是癞子
+		laiZiDictCards := convertToMap(laiZiCards)
+		_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
+		if retCards, retInfo = findHuoJian(size, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
 			return
 		}
 	}
