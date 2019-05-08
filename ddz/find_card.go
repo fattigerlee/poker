@@ -79,7 +79,7 @@ func FindCardsJingDian(info *CardTypeInfo, cards []*Card) (retCards []*Card, ret
 	return
 }
 
-// 找牌(不洗牌)
+// 找牌(不洗牌模式)
 func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	size := len(cards)
 	dictCards := convertToMap(cards)
@@ -171,7 +171,7 @@ func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retI
 	return
 }
 
-// 找牌(不洗牌+双王癞子)
+// 找牌(不洗牌+双王癞子模式)
 func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
 	var normalCards []*Card // 普通牌
 	var laiZiCards []*Card  // 癞子牌
@@ -335,9 +335,9 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTy
 	return
 }
 
-// 找牌(癞子)
+// 找牌(癞子模式)
 
-// 找牌(天地癞子)
+// 找牌(天地癞子模式)
 func FindCardsTianDiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
 	var normalCards []*Card // 普通牌
 	var laiZiCards []*Card  // 癞子牌
