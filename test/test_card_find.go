@@ -47,21 +47,21 @@ func findDan() {
 		MinValue: 15,
 	}
 
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("单:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDan,
 		MinValue: 3,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("单:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDan,
 		MinValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("单:", retCards, retInfo)
 }
 
@@ -90,21 +90,21 @@ func findDui() {
 		CardType: ddz.CardTypeDui,
 		MinValue: 3,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("对:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDui,
 		MinValue: 6,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("对:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeDui,
 		MinValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("对:", retCards, retInfo)
 }
 
@@ -125,7 +125,7 @@ func findSanBuDai() {
 		CardType: ddz.CardTypeSanBuDai,
 		MinValue: 3,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("三不带:", retCards, retInfo)
 }
 
@@ -151,7 +151,7 @@ func findSanDaiYi() {
 		CardType: ddz.CardTypeSanDaiYi,
 		MinValue: 3,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("三带一:", retCards, retInfo)
 
 	cards = []*ddz.Card{
@@ -168,7 +168,7 @@ func findSanDaiYi() {
 		CardType: ddz.CardTypeSanDaiYi,
 		MinValue: 3,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("三带一:", retCards, retInfo)
 }
 
@@ -194,14 +194,14 @@ func findSanDaiEr() {
 		CardType: ddz.CardTypeSanDaiEr,
 		MinValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("三带二:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSanDaiEr,
 		MinValue: 14,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("三带二:", retCards, retInfo)
 }
 
@@ -227,14 +227,14 @@ func findSiDaiDan() {
 		CardType: ddz.CardTypeSiDaiDan,
 		MinValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("四带单:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSiDaiDan,
 		MinValue: 14,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("四带单:", retCards, retInfo)
 }
 
@@ -262,14 +262,14 @@ func findSiDaiDui() {
 		CardType: ddz.CardTypeSiDaiDui,
 		MinValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("四带对:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSiDaiDui,
 		MinValue: 14,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("四带对:", retCards, retInfo)
 }
 
@@ -300,7 +300,7 @@ func findShunZi() {
 		MinValue: 3,
 		MaxValue: 13,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("顺子:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -308,7 +308,7 @@ func findShunZi() {
 		MinValue: 6,
 		MaxValue: 13,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("顺子:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -316,7 +316,7 @@ func findShunZi() {
 		MinValue: 10,
 		MaxValue: 14,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("顺子:", retCards, retInfo)
 }
 
@@ -348,7 +348,7 @@ func findLianDui() {
 		MinValue: 3,
 		MaxValue: 5,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("连对:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -356,7 +356,7 @@ func findLianDui() {
 		MinValue: 4,
 		MaxValue: 6,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("连对:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -364,7 +364,7 @@ func findLianDui() {
 		MinValue: 5,
 		MaxValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("连对:", retCards, retInfo)
 }
 
@@ -392,7 +392,7 @@ func findFeiJiBuDai() {
 		MinValue: 12,
 		MaxValue: 13,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("飞机不带:", retCards, retInfo)
 }
 
@@ -424,7 +424,7 @@ func findFeiJiDaiYi() {
 		MinValue: 12,
 		MaxValue: 13,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("飞机带一:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -432,7 +432,7 @@ func findFeiJiDaiYi() {
 		MinValue: 9,
 		MaxValue: 10,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("飞机带一:", retCards, retInfo)
 }
 
@@ -468,7 +468,7 @@ func findFeiJiDaiEr() {
 		MinValue: 7,
 		MaxValue: 8,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("飞机带二:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -476,7 +476,7 @@ func findFeiJiDaiEr() {
 		MinValue: 7,
 		MaxValue: 9,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("飞机带二:", retCards, retInfo)
 }
 
@@ -508,7 +508,7 @@ func findZhaDan() {
 		MinValue: 12,
 		MaxValue: 0,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("炸弹:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -516,7 +516,7 @@ func findZhaDan() {
 		MinValue: 14,
 		MaxValue: 0,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("炸弹:", retCards, retInfo)
 }
 
@@ -530,10 +530,10 @@ func findHuoJian() {
 		ddz.NewCard(ddz.SuitTypeHeart, 13),
 		ddz.NewCard(ddz.SuitTypeSpade, 13),
 		ddz.NewCard(ddz.SuitTypeClub, 13),
-		ddz.NewCard(ddz.SuitTypeDiamond, 12),
+		ddz.NewCard(ddz.SuitTypeDiamond, 13),
 		ddz.NewCard(ddz.SuitTypeHeart, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
-		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
 		ddz.NewCard(ddz.SuitTypeDiamond, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 12),
 		ddz.NewCard(ddz.SuitTypeClub, 12),
@@ -548,7 +548,7 @@ func findHuoJian() {
 		MinValue: 0,
 		MaxValue: 0,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsBuXiPai(info, cards)
 	fmt.Println("火箭:", retCards, retInfo)
 }
 
@@ -582,7 +582,7 @@ func findLianZha() {
 		MinValue: 12,
 		MaxValue: 0,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsBuXiPai(info, cards)
 	fmt.Println("连炸:", retCards, retInfo)
 
 	info = &ddz.CardTypeInfo{
@@ -590,6 +590,6 @@ func findLianZha() {
 		MinValue: 13,
 		MaxValue: 14,
 	}
-	retCards, retInfo = ddz.FindCards(info, cards)
+	retCards, retInfo = ddz.FindCardsBuXiPai(info, cards)
 	fmt.Println("连炸:", retCards, retInfo)
 }

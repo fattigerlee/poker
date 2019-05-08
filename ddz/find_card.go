@@ -1,41 +1,9 @@
 package ddz
 
 // 找出比牌型更大的牌
-func FindCards(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
-	if len(laiZiNums) == 0 {
-		// 无癞子找牌
-		return findCards(info, cards)
-	}
 
-	var normalCards []*Card // 普通牌
-	var laiZiCards []*Card  // 癞子牌
-	for _, c := range cards {
-		var exist bool
-		for _, num := range laiZiNums {
-			if c.Num == num {
-				exist = true
-				break
-			}
-		}
-
-		if exist {
-			laiZiCards = append(laiZiCards, c)
-		} else {
-			normalCards = append(normalCards, c)
-		}
-	}
-
-	if len(laiZiCards) == 0 {
-		// 无癞子找牌
-		return findCards(info, cards)
-	} else {
-		// 癞子找牌
-		return findCardsLaiZi(info, cards, normalCards, laiZiCards)
-	}
-}
-
-// 无癞子找牌
-func findCards(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+// 找牌(经典模式)
+func FindCardsJingDian(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	size := len(cards)
 	dictCards := convertToMap(cards)
 	count, value, _ := getCountValueLine(dictCards)
@@ -93,12 +61,81 @@ func findCards(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo Car
 		if retCards, retInfo = findBigZhaDan(size, info, dictCards, count, value); retInfo.CardType != CardTypeNone {
 			return
 		}
+	}
 
+	if info.CardType < CardTypeZhaDan {
+		// 炸弹
+		if retCards, retInfo = findZhaDan(size, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeHuoJian {
+		// 火箭
 		if retCards, retInfo = findHuoJian(size, dictCards, value); retInfo.CardType != CardTypeNone {
 			return
 		}
+	}
+	return
+}
 
-		if retCards, retInfo = findLianZha(size, dictCards, count, value); retInfo.CardType != CardTypeNone {
+// 找牌(不洗牌)
+func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+	size := len(cards)
+	dictCards := convertToMap(cards)
+	count, value, _ := getCountValueLine(dictCards)
+
+	switch info.CardType {
+	case CardTypeDan:
+		if retCards, retInfo = findBigDan(size, info, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeDui:
+		if retCards, retInfo = findBigDui(size, info, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanBuDai:
+		if retCards, retInfo = findBigSanBuDai(size, info, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiYi:
+		if retCards, retInfo = findBigSanDaiYi(size, info, cards, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiEr:
+		if retCards, retInfo = findBigSanDaiEr(size, info, cards, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDan:
+		if retCards, retInfo = findBigSiDaiDan(size, info, cards, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDui:
+		if retCards, retInfo = findBigSiDaiDui(size, info, cards, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeShunZi:
+		if retCards, retInfo = findBigShunZi(size, info, dictCards, count); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeLianDui:
+		if retCards, retInfo = findBigLianDui(size, info, dictCards, count); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiBuDai:
+		if retCards, retInfo = findBigFeiJiBuDai(size, info, dictCards, count); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiYi:
+		if retCards, retInfo = findBigFeiJiDaiYi(size, info, cards, dictCards, count, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiEr:
+		if retCards, retInfo = findBigFeiJiDaiEr(size, info, cards, dictCards, count, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeZhaDan:
+		if retCards, retInfo = findBigZhaDan(size, info, dictCards, count, value); retInfo.CardType != CardTypeNone {
 			return
 		}
 	case CardTypeHuoJian:
@@ -111,14 +148,379 @@ func findCards(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo Car
 		}
 	}
 
-	// 炸弹
-	if retCards, retInfo = findZhaDan(size, dictCards, value); retInfo.CardType != CardTypeNone {
-		return
+	if info.CardType < CardTypeZhaDan {
+		// 炸弹
+		if retCards, retInfo = findZhaDan(size, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
 	}
 
-	// 火箭
-	if retCards, retInfo = findHuoJian(size, dictCards, value); retInfo.CardType != CardTypeNone {
-		return
+	if info.CardType < CardTypeHuoJian {
+		// 火箭
+		if retCards, retInfo = findHuoJian(size, dictCards, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeLianZha {
+		// 连炸
+		if retCards, retInfo = findLianZha(size, dictCards, count, value); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+	return
+}
+
+// 找牌(不洗牌+双王癞子)
+func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
+	var normalCards []*Card // 普通牌
+	var laiZiCards []*Card  // 癞子牌
+	for _, c := range cards {
+		var exist bool
+		for _, num := range laiZiNums {
+			if c.Num == num {
+				exist = true
+				break
+			}
+		}
+
+		if exist {
+			laiZiCards = append(laiZiCards, c)
+		} else {
+			normalCards = append(normalCards, c)
+		}
+	}
+
+	size := len(cards)           // 手牌数量
+	laiZiSize := len(laiZiCards) // 癞子牌数量
+
+	if laiZiSize == 0 {
+		return FindCardsBuXiPai(info, cards)
+	}
+
+	normalDictCards := convertToMap(normalCards)
+	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
+
+	switch info.CardType {
+	case CardTypeDan:
+		if retCards, retInfo = findBigDanLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeDui:
+		if retCards, retInfo = findBigDuiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanBuDai:
+		if retCards, retInfo = findBigSanBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiYi:
+		if retCards, retInfo = findBigSanDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiEr:
+		if retCards, retInfo = findBigSanDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDan:
+		if retCards, retInfo = findBigSiDaiDanLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDui:
+		if retCards, retInfo = findBigSiDaiDuiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeShunZi:
+		if retCards, retInfo = findBigShunZiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeLianDui:
+		if retCards, retInfo = findBigLianDuiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiBuDai:
+		if retCards, retInfo = findBigFeiJiBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiYi:
+		if retCards, retInfo = findBigFeiJiDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiEr:
+		if retCards, retInfo = findBigFeiJiDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan4:
+		// 更大的四软炸
+		if retCards, retInfo = findBigRuanZhaDan4(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeZhaDan:
+		// 更大的硬炸弹
+		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan5:
+		// 更大的五软炸
+		if retCards, retInfo = findBigRuanZhaDan5(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan6:
+		// 更大的六软炸
+		if retCards, retInfo = findBigRuanZhaDan6(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanLianZha:
+		// 更大的软连炸
+		if retCards, retInfo = findBigRuanLianZha(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeLianZha:
+		// 更大的连炸
+		if retCards, retInfo = findBigLianZha(size, info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan4 {
+		// 四软炸
+		if retCards, retInfo = findRuanZhaDan4(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeZhaDan {
+		// 硬炸弹
+		if retCards, retInfo = findZhaDan(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan5 {
+		// 五软炸
+		if retCards, retInfo = findRuanZhaDan5(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan6 {
+		// 六软炸
+		if retCards, retInfo = findRuanZhaDan6(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeHuoJian {
+		// 火箭癞子
+		laiZiDictCards := convertToMap(laiZiCards)
+		_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
+		if retCards, retInfo = findHuoJian(size, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanLianZha {
+		// 软连炸
+		if retCards, retInfo = findRuanLianZha(size, laiZiSize, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeLianZha {
+		// 硬连炸
+		if retCards, retInfo = findLianZha(size, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+	return
+}
+
+// 找牌(癞子)
+
+// 找牌(天地癞子)
+func FindCardsTianDiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
+	var normalCards []*Card // 普通牌
+	var laiZiCards []*Card  // 癞子牌
+	for _, c := range cards {
+		var exist bool
+		for _, num := range laiZiNums {
+			if c.Num == num {
+				exist = true
+				break
+			}
+		}
+
+		if exist {
+			laiZiCards = append(laiZiCards, c)
+		} else {
+			normalCards = append(normalCards, c)
+		}
+	}
+
+	size := len(cards)           // 手牌数量
+	laiZiSize := len(laiZiCards) // 癞子牌数量
+
+	if laiZiSize == 0 {
+		return FindCardsJingDian(info, cards)
+	}
+
+	normalDictCards := convertToMap(normalCards)
+	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
+
+	switch info.CardType {
+	case CardTypeDan:
+		if retCards, retInfo = findBigDanLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeDui:
+		if retCards, retInfo = findBigDuiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanBuDai:
+		if retCards, retInfo = findBigSanBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiYi:
+		if retCards, retInfo = findBigSanDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSanDaiEr:
+		if retCards, retInfo = findBigSanDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDan:
+		if retCards, retInfo = findBigSiDaiDanLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeSiDaiDui:
+		if retCards, retInfo = findBigSiDaiDuiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeShunZi:
+		if retCards, retInfo = findBigShunZiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeLianDui:
+		if retCards, retInfo = findBigLianDuiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiBuDai:
+		if retCards, retInfo = findBigFeiJiBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiYi:
+		if retCards, retInfo = findBigFeiJiDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeFeiJiDaiEr:
+		if retCards, retInfo = findBigFeiJiDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan4:
+		// 更大的四软炸
+		if retCards, retInfo = findBigRuanZhaDan4(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeZhaDan:
+		// 更大的硬炸弹
+		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeChunLaiZiZhaDan:
+		// 更大的四纯癞子炸
+		if retCards, retInfo = findBigChunLaiZiZhaDan(laiZiSize, info, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan5:
+		// 更大的五软炸
+		if retCards, retInfo = findBigRuanZhaDan5(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan6:
+		// 更大的六软炸
+		if retCards, retInfo = findBigRuanZhaDan6(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan7:
+		// 更大的七软炸
+		if retCards, retInfo = findBigRuanZhaDan7(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	case CardTypeRuanZhaDan8:
+		// 更大的八软炸
+		if retCards, retInfo = findBigRuanZhaDan8(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan4 {
+		// 四软炸
+		if retCards, retInfo = findRuanZhaDan4(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeZhaDan {
+		// 硬炸弹
+		if retCards, retInfo = findZhaDan(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeChunLaiZiZhaDan {
+		// 四纯癞子炸,四癞子炸
+		if retCards, retInfo = findLaiZiZhaDan4(laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan5 {
+		// 五软炸
+		if retCards, retInfo = findRuanZhaDan5(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeLaiZiZhaDan5 {
+		// 五癞子炸
+		if retCards, retInfo = findLaiZiZhaDan(CardTypeLaiZiZhaDan5, laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan6 {
+		// 六软炸
+		if retCards, retInfo = findRuanZhaDan6(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeLaiZiZhaDan6 {
+		// 六癞子炸
+		if retCards, retInfo = findLaiZiZhaDan(CardTypeLaiZiZhaDan6, laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan7 {
+		// 七软炸
+		if retCards, retInfo = findRuanZhaDan7(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeRuanZhaDan8 {
+		// 八软炸
+		if retCards, retInfo = findRuanZhaDan8(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+	}
+
+	if info.CardType < CardTypeHuoJian {
+		// 火箭
+		if retCards, retInfo = findHuoJian(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
+			return
+		}
 	}
 	return
 }
@@ -819,119 +1221,6 @@ func findBigLianZha(size int, info *CardTypeInfo, dictCards map[*Card]bool, coun
 		nums = nums[0:0]
 	}
 	return
-}
-
-// 癞子找牌
-func findCardsLaiZi(info *CardTypeInfo, cards []*Card, normalCards []*Card, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
-	size := len(cards)
-	laiZiSize := len(laiZiCards)
-
-	normalDictCards := convertToMap(normalCards)
-	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
-
-	switch info.CardType {
-	case CardTypeDan:
-		if retCards, retInfo = findBigDanLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeDui:
-		if retCards, retInfo = findBigDuiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeSanBuDai:
-		if retCards, retInfo = findBigSanBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeSanDaiYi:
-		if retCards, retInfo = findBigSanDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeSanDaiEr:
-		if retCards, retInfo = findBigSanDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeSiDaiDan:
-		if retCards, retInfo = findBigSiDaiDanLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeSiDaiDui:
-		if retCards, retInfo = findBigSiDaiDuiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeShunZi:
-		if retCards, retInfo = findBigShunZiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeLianDui:
-		if retCards, retInfo = findBigLianDuiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeFeiJiBuDai:
-		if retCards, retInfo = findBigFeiJiBuDaiLaiZi(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeFeiJiDaiYi:
-		if retCards, retInfo = findBigFeiJiDaiYiLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeFeiJiDaiEr:
-		if retCards, retInfo = findBigFeiJiDaiErLaiZi(size, laiZiSize, info, normalCards, normalDictCards, normalCount, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeRuanZhaDan4:
-		// 更大的四软炸
-		if retCards, retInfo = findBigRuanZhaDan4(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	case CardTypeZhaDan:
-		// 更大的硬炸弹
-		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeChunLaiZiZhaDan:
-		// 更大的四纯癞子炸
-		if retCards, retInfo = findBigChunLaiZiZhaDan(laiZiSize, info, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeRuanZhaDan5:
-		// 更大的五软炸
-		if retCards, retInfo = findBigRuanZhaDan5(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeRuanZhaDan6:
-		// 更大的六软炸
-		if retCards, retInfo = findBigRuanZhaDan6(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeRuanZhaDan7:
-		// 更大的七软炸
-		if retCards, retInfo = findBigRuanZhaDan7(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeRuanZhaDan8:
-		// 更大的八软炸
-		if retCards, retInfo = findBigRuanZhaDan8(size, laiZiSize, info, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeRuanLianZha:
-		// 更大的软连炸
-		if retCards, retInfo = findBigRuanLianZha(size, laiZiSize, info, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-	case CardTypeLianZha:
-		// 更大的连炸
-		if retCards, retInfo = findBigLianZha(size, info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-	return findZhaDanMore(size, laiZiSize, info, cards, normalDictCards, normalCount, normalValue, laiZiCards)
 }
 
 // 癞子单张
@@ -2748,7 +3037,7 @@ func findLaiZiZhaDan(cardType CardType, laiZiSize int, laiZiCards []*Card) (retC
 	return
 }
 
-// 四癞子炸,四纯癞子炸
+// 四纯癞子炸,四癞子炸
 func findLaiZiZhaDan4(laiZiSize int, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if laiZiSize < 4 {
 		return
@@ -3103,100 +3392,5 @@ func findBigRuanLianZha(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 		nums = nums[0:0]
 	}
 
-	return
-}
-
-// 找更多的炸弹
-func findZhaDanMore(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalCount countList, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
-	if info.CardType < CardTypeRuanZhaDan4 {
-		// 四软炸
-		if retCards, retInfo = findRuanZhaDan4(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeZhaDan {
-		// 硬炸弹
-		if retCards, retInfo = findZhaDan(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeChunLaiZiZhaDan {
-		// 四纯癞子炸
-		if retCards, retInfo = findLaiZiZhaDan4(laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeRuanZhaDan5 {
-		// 五软炸
-		if retCards, retInfo = findRuanZhaDan5(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeLaiZiZhaDan5 {
-		// 五癞子炸
-		if retCards, retInfo = findLaiZiZhaDan(CardTypeLaiZiZhaDan5, laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeRuanZhaDan6 {
-		// 六软炸
-		if retCards, retInfo = findRuanZhaDan6(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeLaiZiZhaDan6 {
-		// 六癞子炸
-		if retCards, retInfo = findLaiZiZhaDan(CardTypeLaiZiZhaDan6, laiZiSize, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeRuanZhaDan7 {
-		// 七软炸
-		if retCards, retInfo = findRuanZhaDan7(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeRuanZhaDan8 {
-		// 八软炸
-		if retCards, retInfo = findRuanZhaDan8(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeHuoJian {
-		// 火箭
-		if retCards, retInfo = findHuoJian(size, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
-			return
-		}
-
-		// 双王是癞子
-		laiZiDictCards := convertToMap(laiZiCards)
-		_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
-		if retCards, retInfo = findHuoJian(size, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeRuanLianZha {
-		// 软连炸
-		if retCards, retInfo = findRuanLianZha(size, laiZiSize, normalDictCards, normalCount, laiZiCards); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
-
-	if info.CardType < CardTypeLianZha {
-		// 硬连炸
-		if retCards, retInfo = findLianZha(size, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
-			return
-		}
-	}
 	return
 }
