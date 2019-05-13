@@ -533,6 +533,11 @@ func analysisLaiZi(cards []*Card, normalCards []*Card, laiZiCards []*Card) (list
 		list = append(list, &info)
 	}
 
+	// 火箭
+	if info := isHuoJian(size, value); info.CardType != CardTypeNone {
+		list = append(list, &info)
+	}
+
 	// 软炸
 	if info := isRuanZhaDan(size, normalLine); info.CardType != CardTypeNone {
 		list = append(list, &info)

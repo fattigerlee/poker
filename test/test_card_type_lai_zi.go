@@ -25,6 +25,8 @@ func main() {
 	isFeiJiDaiYiLaiZi(laiZiNums)
 	isFeiJiDaiErLaiZi(laiZiNums)
 
+	isLaiZiHuoJian(laiZiNums)
+
 	isLaiZiZhaDan4(laiZiNums)
 	isChunLaiZiZhaDan(laiZiNums)
 
@@ -534,6 +536,18 @@ func isFeiJiDaiErLaiZi(laiZiNums []ddz.NumType) {
 		ddz.NewCard(ddz.SuitTypeDiamond, 9),
 	}
 	fmt.Println("飞机带二:", ddz.GetCardType(cards, laiZiNums...))
+}
+
+func isLaiZiHuoJian(laiZiNums []ddz.NumType) {
+	laiZiNums = []ddz.NumType{16, 17}
+
+	var cards []*ddz.Card
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+	}
+	fmt.Println("火箭:", ddz.GetCardType(cards, laiZiNums...))
 }
 
 func isLaiZiZhaDan4(laiZiNums []ddz.NumType) {
