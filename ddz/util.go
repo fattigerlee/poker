@@ -19,17 +19,18 @@ func (c CardTypeInfo) String() string {
 	return fmt.Sprintf("牌型:%s 最小值:%d 最大值:%d", c.CardType, c.MinValue, c.MaxValue)
 }
 
-type countList [18]int  // 每张牌数量
-type valueList [5][]int // 单张,对子,三张,四张牌的牌值
-type lineList []int     // 所有牌的唯一牌值
+type dictMap map[*Card]bool // 字典,方便找牌
+type countList [18]int      // 每张牌数量
+type valueList [5][]int     // 单张,对子,三张,四张牌的牌值
+type lineList []int         // 所有牌的唯一牌值
 
 // 切片转map
-func convertToMap(cards []*Card) map[*Card]bool {
-	myCards := map[*Card]bool{}
+func convertToMap(cards []*Card) (dictCards dictMap) {
+	dictCards = map[*Card]bool{}
 	for _, c := range cards {
-		myCards[c] = true
+		dictCards[c] = true
 	}
-	return myCards
+	return
 }
 
 // count 每张牌数量
@@ -38,9 +39,9 @@ func convertToMap(cards []*Card) map[*Card]bool {
 // value[3] 所有三张的牌值
 // value[4] 所有四张的牌值
 // line 所有牌的唯一牌值
-func getCountValueLine(cards map[*Card]bool) (count countList, value valueList, line lineList) {
+func getCountValueLine(dictCards dictMap) (count countList, value valueList, line lineList) {
 	// 牌值计数
-	for c := range cards {
+	for c := range dictCards {
 		count[int(c.Num)]++
 	}
 
@@ -64,14 +65,14 @@ func getCountValueLine(cards map[*Card]bool) (count countList, value valueList, 
 }
 
 // 找牌
-func findCardsByNums(cards map[*Card]bool, nums []int) []*Card {
+func findCardsByNums(dictCards dictMap, nums []int) []*Card {
 	var findCards []*Card
 
 	for _, num := range nums {
-		for c := range cards {
+		for c := range dictCards {
 			if c.Num == NumType(num) {
 				findCards = append(findCards, c)
-				delete(cards, c)
+				delete(dictCards, c)
 				break
 			}
 		}

@@ -58,7 +58,7 @@ func FindCardsJingDian(info *CardTypeInfo, cards []*Card) (retCards []*Card, ret
 			return
 		}
 	case CardTypeZhaDan:
-		if retCards, retInfo = findBigZhaDan(size, info, dictCards, count, value); retInfo.CardType != CardTypeNone {
+		if retCards, retInfo = findBigZhaDan(size, info, dictCards, value); retInfo.CardType != CardTypeNone {
 			return
 		}
 	}
@@ -135,7 +135,7 @@ func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retI
 			return
 		}
 	case CardTypeZhaDan:
-		if retCards, retInfo = findBigZhaDan(size, info, dictCards, count, value); retInfo.CardType != CardTypeNone {
+		if retCards, retInfo = findBigZhaDan(size, info, dictCards, value); retInfo.CardType != CardTypeNone {
 			return
 		}
 	case CardTypeHuoJian:
@@ -257,7 +257,7 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTy
 		}
 	case CardTypeZhaDan:
 		// 更大的硬炸弹
-		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
+		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 			return
 		}
 	case CardTypeRuanZhaDan5:
@@ -423,7 +423,7 @@ func FindCardsTianDiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTyp
 		}
 	case CardTypeZhaDan:
 		// 更大的硬炸弹
-		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
+		if retCards, retInfo = findBigZhaDan(size, info, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 			return
 		}
 	case CardTypeChunLaiZiZhaDan:
@@ -526,7 +526,7 @@ func FindCardsTianDiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTyp
 }
 
 // 带单张
-func withDan(cards map[*Card]bool, value valueList) (ret []*Card) {
+func withDan(dictCards dictMap, value valueList) (ret []*Card) {
 	var nums []int
 
 	// 找单张
@@ -537,13 +537,13 @@ func withDan(cards map[*Card]bool, value valueList) (ret []*Card) {
 				continue
 			}
 			nums = append(nums, v)
-			ret = append(ret, findCardsByNums(cards, nums)...)
+			ret = append(ret, findCardsByNums(dictCards, nums)...)
 			return
 		}
 	} else {
 		for _, v := range value[1] {
 			nums = append(nums, v)
-			ret = append(ret, findCardsByNums(cards, nums)...)
+			ret = append(ret, findCardsByNums(dictCards, nums)...)
 			return
 		}
 	}
@@ -551,21 +551,21 @@ func withDan(cards map[*Card]bool, value valueList) (ret []*Card) {
 	// 拆对子
 	for _, v := range value[2] {
 		nums = append(nums, v)
-		ret = append(ret, findCardsByNums(cards, nums)...)
+		ret = append(ret, findCardsByNums(dictCards, nums)...)
 		return
 	}
 
 	// 拆三张
 	for _, v := range value[3] {
 		nums = append(nums, v)
-		ret = append(ret, findCardsByNums(cards, nums)...)
+		ret = append(ret, findCardsByNums(dictCards, nums)...)
 		return
 	}
 	return
 }
 
 // 带对子
-func withDui(cards map[*Card]bool, value valueList) (ret []*Card) {
+func withDui(dictCards dictMap, value valueList) (ret []*Card) {
 	var nums []int
 
 	// 找对子
@@ -573,7 +573,7 @@ func withDui(cards map[*Card]bool, value valueList) (ret []*Card) {
 		for i := 0; i < 2; i++ {
 			nums = append(nums, v)
 		}
-		ret = append(ret, findCardsByNums(cards, nums)...)
+		ret = append(ret, findCardsByNums(dictCards, nums)...)
 		return
 	}
 
@@ -582,14 +582,14 @@ func withDui(cards map[*Card]bool, value valueList) (ret []*Card) {
 		for i := 0; i < 2; i++ {
 			nums = append(nums, v)
 		}
-		ret = append(ret, findCardsByNums(cards, nums)...)
+		ret = append(ret, findCardsByNums(dictCards, nums)...)
 		return
 	}
 	return
 }
 
 // 单张
-func findBigDan(size int, info *CardTypeInfo, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigDan(size int, info *CardTypeInfo, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 1 {
 		return
 	}
@@ -650,7 +650,7 @@ func findBigDan(size int, info *CardTypeInfo, dictCards map[*Card]bool, value va
 }
 
 // 对子
-func findBigDui(size int, info *CardTypeInfo, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigDui(size int, info *CardTypeInfo, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 2 {
 		return
 	}
@@ -686,7 +686,7 @@ func findBigDui(size int, info *CardTypeInfo, dictCards map[*Card]bool, value va
 }
 
 // 三不带
-func findBigSanBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanBuDai(size int, info *CardTypeInfo, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 3 {
 		return
 	}
@@ -709,7 +709,7 @@ func findBigSanBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, val
 }
 
 // 三带一
-func findBigSanDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 4 {
 		return
 	}
@@ -747,7 +747,7 @@ func findBigSanDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards map[
 }
 
 // 三带二
-func findBigSanDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 5 {
 		return
 	}
@@ -785,7 +785,7 @@ func findBigSanDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards map[
 }
 
 // 四带单
-func findBigSiDaiDan(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSiDaiDan(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 6 {
 		return
 	}
@@ -830,7 +830,7 @@ func findBigSiDaiDan(size int, info *CardTypeInfo, cards []*Card, dictCards map[
 }
 
 // 四带对
-func findBigSiDaiDui(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSiDaiDui(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 8 {
 		return
 	}
@@ -875,7 +875,7 @@ func findBigSiDaiDui(size int, info *CardTypeInfo, cards []*Card, dictCards map[
 }
 
 // 顺子
-func findBigShunZi(size int, info *CardTypeInfo, dictCards map[*Card]bool, count countList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigShunZi(size int, info *CardTypeInfo, dictCards dictMap, count countList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange {
 		return
@@ -905,7 +905,7 @@ func findBigShunZi(size int, info *CardTypeInfo, dictCards map[*Card]bool, count
 }
 
 // 连对
-func findBigLianDui(size int, info *CardTypeInfo, dictCards map[*Card]bool, count countList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigLianDui(size int, info *CardTypeInfo, dictCards dictMap, count countList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*2 {
 		return
@@ -937,7 +937,7 @@ func findBigLianDui(size int, info *CardTypeInfo, dictCards map[*Card]bool, coun
 }
 
 // 飞机不带
-func findBigFeiJiBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, count countList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiBuDai(size int, info *CardTypeInfo, dictCards dictMap, count countList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*3 {
 		return
@@ -968,7 +968,7 @@ func findBigFeiJiBuDai(size int, info *CardTypeInfo, dictCards map[*Card]bool, c
 }
 
 // 飞机带一
-func findBigFeiJiDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*4 {
 		return
@@ -1021,7 +1021,7 @@ func findBigFeiJiDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards ma
 }
 
 // 飞机带二
-func findBigFeiJiDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards dictMap, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*5 {
 		return
@@ -1074,7 +1074,7 @@ func findBigFeiJiDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards ma
 }
 
 // 炸弹
-func findZhaDan(size int, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findZhaDan(size int, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 4 {
 		return
 	}
@@ -1094,7 +1094,7 @@ func findZhaDan(size int, dictCards map[*Card]bool, value valueList) (retCards [
 }
 
 // 更大的炸弹
-func findBigZhaDan(size int, info *CardTypeInfo, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigZhaDan(size int, info *CardTypeInfo, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 4 {
 		return
 	}
@@ -1118,7 +1118,7 @@ func findBigZhaDan(size int, info *CardTypeInfo, dictCards map[*Card]bool, count
 }
 
 // 火箭
-func findHuoJian(size int, dictCards map[*Card]bool, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findHuoJian(size int, dictCards dictMap, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 2 {
 		return
 	}
@@ -1134,7 +1134,7 @@ func findHuoJian(size int, dictCards map[*Card]bool, value valueList) (retCards 
 }
 
 // 连炸
-func findLianZha(size int, dictCards map[*Card]bool, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
+func findLianZha(size int, dictCards dictMap, count countList, value valueList) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 8 {
 		return
 	}
@@ -1168,7 +1168,7 @@ func findLianZha(size int, dictCards map[*Card]bool, count countList, value valu
 }
 
 // 更大的连炸
-func findBigLianZha(size int, info *CardTypeInfo, dictCards map[*Card]bool, count countList) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigLianZha(size int, info *CardTypeInfo, dictCards dictMap, count countList) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*4 {
 		return
@@ -1224,7 +1224,7 @@ func findBigLianZha(size int, info *CardTypeInfo, dictCards map[*Card]bool, coun
 }
 
 // 癞子单张
-func findBigDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigDan(len(normalDictCards), info, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1297,7 +1297,7 @@ func findBigDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCard
 }
 
 // 癞子对子
-func findBigDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigDui(len(normalDictCards), info, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1375,7 +1375,7 @@ func findBigDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCard
 }
 
 // 癞子三不带
-func findBigSanBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigSanBuDai(len(normalDictCards), info, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1449,7 +1449,7 @@ func findBigSanBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDic
 }
 
 // 癞子三带一
-func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigSanDaiYi(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1524,7 +1524,7 @@ func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 }
 
 // 癞子三带二
-func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigSanDaiYi(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1599,7 +1599,7 @@ func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 }
 
 // 癞子四带单
-func findBigSiDaiDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSiDaiDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigSiDaiDan(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1690,7 +1690,7 @@ func findBigSiDaiDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 }
 
 // 癞子四带对
-func findBigSiDaiDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigSiDaiDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigSiDaiDui(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -1781,7 +1781,7 @@ func findBigSiDaiDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 }
 
 // 癞子顺子
-func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigShunZi(len(normalDictCards), info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
 		return
@@ -1866,7 +1866,7 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 }
 
 // 癞子连对
-func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigLianDui(len(normalDictCards), info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
 		return
@@ -1961,7 +1961,7 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 }
 
 // 癞子飞机不带
-func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigFeiJiBuDai(len(normalDictCards), info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
 		return
@@ -2066,7 +2066,7 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 }
 
 // 癞子飞机带一
-func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalCount countList, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalCount countList, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigFeiJiDaiYi(len(normalDictCards), info, normalCards, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -2211,7 +2211,7 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 }
 
 // 癞子飞机带二
-func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards map[*Card]bool, normalCount countList, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalCount countList, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
 	if retCards, retInfo = findBigFeiJiDaiEr(len(normalDictCards), info, normalCards, normalDictCards, normalCount, normalValue); retInfo.CardType != CardTypeNone {
 		return
@@ -2356,7 +2356,7 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 }
 
 // 四软炸
-func findRuanZhaDan4(size int, laiZiSize int, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanZhaDan4(size int, laiZiSize int, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 4 {
 		return
 	}
@@ -2413,7 +2413,7 @@ func findRuanZhaDan4(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的四软炸
-func findBigRuanZhaDan4(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanZhaDan4(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 4 {
 		return
 	}
@@ -2475,7 +2475,7 @@ func findBigRuanZhaDan4(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 }
 
 // 五软炸
-func findRuanZhaDan5(size int, laiZiSize int, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanZhaDan5(size int, laiZiSize int, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 5 {
 		return
 	}
@@ -2547,7 +2547,7 @@ func findRuanZhaDan5(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的五软炸
-func findBigRuanZhaDan5(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanZhaDan5(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 5 {
 		return
 	}
@@ -2623,7 +2623,7 @@ func findBigRuanZhaDan5(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 }
 
 // 六软炸
-func findRuanZhaDan6(size int, laiZiSize int, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanZhaDan6(size int, laiZiSize int, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 6 {
 		return
 	}
@@ -2695,7 +2695,7 @@ func findRuanZhaDan6(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的六软炸
-func findBigRuanZhaDan6(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanZhaDan6(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 6 {
 		return
 	}
@@ -2771,7 +2771,7 @@ func findBigRuanZhaDan6(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 }
 
 // 七软炸
-func findRuanZhaDan7(size int, laiZiSize int, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanZhaDan7(size int, laiZiSize int, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 7 {
 		return
 	}
@@ -2843,7 +2843,7 @@ func findRuanZhaDan7(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的七软炸
-func findBigRuanZhaDan7(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanZhaDan7(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 7 {
 		return
 	}
@@ -2919,7 +2919,7 @@ func findBigRuanZhaDan7(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 }
 
 // 八软炸
-func findRuanZhaDan8(size int, laiZiSize int, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanZhaDan8(size int, laiZiSize int, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 8 {
 		return
 	}
@@ -2991,7 +2991,7 @@ func findRuanZhaDan8(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的八软炸
-func findBigRuanZhaDan8(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanZhaDan8(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	if size < 8 {
 		return
 	}
@@ -3091,7 +3091,7 @@ func findBigChunLaiZiZhaDan(laiZiSize int, info *CardTypeInfo, laiZiCards []*Car
 }
 
 // 软连炸
-func findRuanLianZha(size int, laiZiSize int, normalDictCards map[*Card]bool, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findRuanLianZha(size int, laiZiSize int, normalDictCards dictMap, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := 2
 	if size < valueRange*4 {
 		return
@@ -3194,7 +3194,7 @@ func findRuanLianZha(size int, laiZiSize int, normalDictCards map[*Card]bool, no
 }
 
 // 更大的软连炸
-func findBigRuanLianZha(size int, laiZiSize int, info *CardTypeInfo, normalDictCards map[*Card]bool, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
+func findBigRuanLianZha(size int, laiZiSize int, info *CardTypeInfo, normalDictCards dictMap, normalCount countList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	valueRange := info.MaxValue - info.MinValue + 1
 	if size < valueRange*4 {
 		return
