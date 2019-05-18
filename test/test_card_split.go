@@ -109,15 +109,12 @@ func splitJingDian() {
 		ddz.NewCard(ddz.SuitTypeHeart, 5),
 		ddz.NewCard(ddz.SuitTypeDiamond, 5),
 		ddz.NewCard(ddz.SuitTypeHeart, 6),
-		ddz.NewCard(ddz.SuitTypeDiamond, 7),
 		ddz.NewCard(ddz.SuitTypeDiamond, 6),
-		ddz.NewCard(ddz.SuitTypeSpade, 7),
 		ddz.NewCard(ddz.SuitTypeDiamond, 8),
 		ddz.NewCard(ddz.SuitTypeDiamond, 9),
 		ddz.NewCard(ddz.SuitTypeSpade, 10),
 		ddz.NewCard(ddz.SuitTypeHeart, 11),
 		ddz.NewCard(ddz.SuitTypeHeart, 12),
-
 		ddz.NewCard(ddz.SuitTypeHeart, 14),
 		ddz.NewCard(ddz.SuitTypeDiamond, 14),
 		ddz.NewCard(ddz.SuitTypeSpade, 14),
@@ -125,6 +122,7 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)5:", cardsList, infoList)
+	fmt.Println("手数(经典模式)5:", ddz.GetMinCount(infoList))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 3),
@@ -286,6 +284,7 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)14:", cardsList, infoList)
+	fmt.Println("手数(经典模式)14:", ddz.GetMinCount(infoList))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 9),
@@ -300,6 +299,28 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)15:", cardsList, infoList)
+	fmt.Println("手数(经典模式)15:", ddz.GetMinCount(infoList))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 3),
+		ddz.NewCard(ddz.SuitTypeDiamond, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 4),
+		ddz.NewCard(ddz.SuitTypeHeart, 4),
+		ddz.NewCard(ddz.SuitTypeDiamond, 4),
+		ddz.NewCard(ddz.SuitTypeHeart, 5),
+		ddz.NewCard(ddz.SuitTypeDiamond, 5),
+		ddz.NewCard(ddz.SuitTypeSpade, 5),
+		ddz.NewCard(ddz.SuitTypeDiamond, 6),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+	}
+
+	cardsList, infoList = ddz.SplitCardsJingDian(cards)
+	fmt.Println("拆牌(经典模式)16:", cardsList, infoList)
+	fmt.Println("手数(经典模式)16:", ddz.GetMinCount(infoList))
 }
 
 func splitBuXiPai() {

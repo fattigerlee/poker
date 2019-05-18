@@ -294,6 +294,90 @@ func SplitCardsBuXiPaiLaiZi(cards []*Card) (retCardsList [][]*Card, retInfoList 
 	return
 }
 
+// 计算最少手数
+func GetMinCount(list []CardTypeInfo) int {
+	var totalCount int
+
+	// 统计单和对数量
+	var dui int
+	var dan int
+	for _, info := range list {
+		switch info.CardType {
+		case CardTypeDan:
+			dan++
+
+		case CardTypeDui:
+			dui++
+		}
+	}
+
+	// 先处理飞机
+	for _, info := range list {
+		if info.CardType == CardTypeFeiJiBuDai {
+			// 单和对不够用
+			valueRange := info.MaxValue - info.MinValue + 1
+			if dan+dui*2 < valueRange {
+				continue
+			}
+
+			// 单比较多
+			if dan >= valueRange {
+				dan = dan - valueRange
+				continue
+			}
+
+			// 对比较多
+			if dui >= valueRange {
+				dui = dui - valueRange
+				continue
+			}
+
+			// 都不够,先带单,然后拆对子
+			dan = 0
+			need := valueRange - dan
+			if need%2 == 0 {
+				dui = dui - need/2
+			} else {
+				// 对子拆了,少个对子,多个单
+				dui = dui - need/2 - 1
+				dan++
+			}
+		}
+	}
+
+	// 最后处理三张
+	for _, info := range list {
+		if info.CardType == CardTypeSanBuDai {
+			// 单和对不够用
+			if dan+dui*2 < 1 {
+				continue
+			}
+
+			// 单比较多
+			if dan >= 1 {
+				dan = dan - 1
+				continue
+			}
+
+			// 对比较多
+			if dui >= 1 {
+				dui = dui - 1
+				continue
+			}
+		}
+	}
+
+	// 计算最终手数
+	totalCount = dan + dui
+	for _, info := range list {
+		if info.CardType == CardTypeDan || info.CardType == CardTypeDui {
+			continue
+		}
+		totalCount++
+	}
+	return totalCount
+}
+
 // 拆连炸
 func splitLianZha(size int, dictCards dictMap, count countList, value valueList) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
 	if size < 8 {
