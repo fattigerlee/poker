@@ -6,13 +6,14 @@ import (
 )
 
 func main() {
-	laiZiNums := []ddz.NumType{9, 10}
+	laiZiNums := []ddz.NumType{16, 17}
 
 	findDanLaiZi(laiZiNums)
 	findDuiLaiZi(laiZiNums)
 
 	findSanBuDaiLaiZi(laiZiNums)
 	findSanDaiYiLaiZi(laiZiNums)
+	findSanDaiErLaiZi(laiZiNums)
 
 	findShunZiLaiZi(laiZiNums)
 
@@ -20,7 +21,6 @@ func main() {
 	findLaiZiZhaDan4(laiZiNums)
 	findChunLaiZiZhaDan(laiZiNums)
 
-	laiZiNums = []ddz.NumType{16, 17}
 	findHuoJianLaiZi(laiZiNums)
 	findRuanLianZha(laiZiNums)
 	findLianZhaLaiZi(laiZiNums)
@@ -70,6 +70,21 @@ func findDanLaiZi(laiZiNums []ddz.NumType) {
 		CardType: ddz.CardTypeDan,
 		MinValue: 14,
 	}
+	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("单张:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeDan,
+		MinValue: 14,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("单张:", retCards, retInfo)
+
 	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("单张:", retCards, retInfo)
 }
@@ -199,6 +214,29 @@ func findSanDaiYiLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("三带一:", retCards, retInfo)
+}
+
+// 三带二
+func findSanDaiErLaiZi(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 16),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeSanDaiEr,
+		MinValue: 8,
+	}
+	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("三带二:", retCards, retInfo)
 }
 
 // 顺子

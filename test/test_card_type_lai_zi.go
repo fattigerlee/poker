@@ -139,6 +139,15 @@ func isSanDaiErLaiZi(laiZiNums []ddz.NumType) {
 		ddz.NewCard(ddz.SuitTypeClub, 9),
 	}
 	fmt.Println("三带二:", ddz.GetCardType(cards, laiZiNums...))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
+	}
+	fmt.Println("三带二:", ddz.GetCardType(cards, laiZiNums...))
 }
 
 func isSiDaiDanLaiZi(laiZiNums []ddz.NumType) {

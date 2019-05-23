@@ -1538,7 +1538,7 @@ func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 // 癞子三带二
 func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCards []*Card, normalDictCards dictMap, normalValue valueList, laiZiCards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	// 非癞子牌里有大牌
-	if retCards, retInfo = findBigSanDaiYi(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
+	if retCards, retInfo = findBigSanDaiEr(len(normalDictCards), info, normalCards, normalDictCards, normalValue); retInfo.CardType != CardTypeNone {
 		return
 	}
 
