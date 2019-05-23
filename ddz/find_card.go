@@ -172,7 +172,7 @@ func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retI
 }
 
 // 找牌(不洗牌+双王癞子模式)
-func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumType) (retCards []*Card, retInfo CardTypeInfo) {
+func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumType) (retCards []*Card, retInfo CardTypeInfo) {
 	var normalCards []*Card // 普通牌
 	var laiZiCards []*Card  // 癞子牌
 	for _, c := range cards {
