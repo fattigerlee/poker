@@ -194,10 +194,6 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTy
 	size := len(cards)           // 手牌数量
 	laiZiSize := len(laiZiCards) // 癞子牌数量
 
-	if laiZiSize == 0 {
-		return FindCardsBuXiPai(info, cards)
-	}
-
 	normalDictCards := convertToMap(normalCards)
 	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
 

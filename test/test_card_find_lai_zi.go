@@ -23,6 +23,7 @@ func main() {
 	laiZiNums = []ddz.NumType{16, 17}
 	findHuoJianLaiZi(laiZiNums)
 	findRuanLianZha(laiZiNums)
+	findLianZhaLaiZi(laiZiNums)
 }
 
 // 单张
@@ -467,4 +468,54 @@ func findRuanLianZha(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("软连炸:", retCards, retInfo)
+}
+
+// 硬连炸
+func findLianZhaLaiZi(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 7),
+		ddz.NewCard(ddz.SuitTypeSpade, 7),
+		ddz.NewCard(ddz.SuitTypeHeart, 7),
+		ddz.NewCard(ddz.SuitTypeDiamond, 7),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeRuanZhaDan6,
+		MinValue: 3,
+		MaxValue: 0,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("硬连炸:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 7),
+		ddz.NewCard(ddz.SuitTypeSpade, 7),
+		ddz.NewCard(ddz.SuitTypeHeart, 7),
+		ddz.NewCard(ddz.SuitTypeDiamond, 7),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeDiamond, 9),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeRuanZhaDan6,
+		MinValue: 3,
+		MaxValue: 0,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("硬连炸:", retCards, retInfo)
 }
