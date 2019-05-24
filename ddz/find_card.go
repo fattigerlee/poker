@@ -1516,7 +1516,7 @@ func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 			retCards = append(retCards, laiZiCards[0:2]...)
 			retInfo.CardType = CardTypeSanDaiYi
 			retInfo.MinValue = v
-			return
+			break
 		}
 	}
 
@@ -1591,7 +1591,7 @@ func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 			retCards = append(retCards, laiZiCards[0:2]...)
 			retInfo.CardType = CardTypeSanDaiEr
 			retInfo.MinValue = v
-			return
+			break
 		}
 	}
 
@@ -2194,7 +2194,7 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			retInfo.CardType = CardTypeFeiJiDaiYi
 			retInfo.MinValue = line[0]
 			retInfo.MaxValue = line[0] + valueRange - 1
-			return
+			break
 		}
 		nums = nums[0:0]
 		line = line[0:0]
@@ -2275,7 +2275,7 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			retInfo.CardType = CardTypeFeiJiDaiEr
 			retInfo.MinValue = line[0]
 			retInfo.MaxValue = line[0] + valueRange - 1
-			return
+			break
 		}
 		nums = nums[0:0]
 		line = line[0:0]
@@ -2339,7 +2339,7 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			retInfo.CardType = CardTypeFeiJiDaiEr
 			retInfo.MinValue = line[0]
 			retInfo.MaxValue = line[0] + valueRange - 1
-			return
+			break
 		}
 		nums = nums[0:0]
 		line = line[0:0]

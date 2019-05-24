@@ -215,6 +215,22 @@ func findSanDaiYiLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("三带一:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 5),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeSanDaiYi,
+		MinValue: 11,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("三带一:", retCards, retInfo)
 }
 
 // 三带二
