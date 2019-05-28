@@ -80,6 +80,20 @@ func findCardsByNums(dictCards dictMap, nums []int) []*Card {
 	return findCards
 }
 
+// 找癞子
+func findCardsLaiZi(dictCards dictMap, count int) []*Card {
+	var findCards []*Card
+
+	for i := 0; i < count; i++ {
+		for c := range dictCards {
+			findCards = append(findCards, c)
+			delete(dictCards, c)
+			break
+		}
+	}
+	return findCards
+}
+
 // 判断牌值是否是大小王
 func isJoker(value int) bool {
 	if value == NumTypeSmallJoker || value == NumTypeBigJoker {

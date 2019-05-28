@@ -1,6 +1,8 @@
 package ddz
 
-import "sort"
+import (
+	"sort"
+)
 
 // 拆牌(经典模式)
 func SplitCardsJingDian(cards []*Card) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
@@ -192,105 +194,107 @@ func SplitCardsBuXiPai(cards []*Card) (retCardsList [][]*Card, retInfoList []Car
 }
 
 // 拆牌(不洗牌+双王癞子模式)
-func SplitCardsBuXiPaiLaiZi(cards []*Card) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
-	dictCards := convertToMap(cards)
+func SplitCardsBuXiPaiLaiZi(cards []*Card, laiZiNums []NumType) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
+	var normalCards []*Card // 普通牌
+	var laiZiCards []*Card  // 癞子牌
+	for _, c := range cards {
+		var exist bool
+		for _, num := range laiZiNums {
+			if c.Num == num {
+				exist = true
+				break
+			}
+		}
 
-	size := len(dictCards)
-	count, value, _ := getCountValueLine(dictCards)
-
-	// 拆连炸
-	if cardsList, infoList := splitLianZha(size, dictCards, count, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
-
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
+		if exist {
+			laiZiCards = append(laiZiCards, c)
+		} else {
+			normalCards = append(normalCards, c)
+		}
 	}
 
-	// 拆软连炸
+	laiZiSize := len(laiZiCards) // 癞子牌数量
 
-	// 火箭
-	if retCards, retInfo := findHuoJian(size, dictCards, value); retInfo.CardType != CardTypeNone {
+	if laiZiSize == 0 {
+		return SplitCardsBuXiPai(cards)
+	}
+
+	// 癞子牌
+	laiZiDictCards := convertToMap(laiZiCards)
+	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
+
+	// 非癞子牌拆牌
+	retCardsList, retInfoList = SplitCardsBuXiPai(normalCards)
+
+	// 拆癞子火箭
+	if retCards, retInfo := findHuoJian(laiZiSize, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
 		retCardsList = append(retCardsList, retCards)
 		retInfoList = append(retInfoList, retInfo)
 
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
+		laiZiSize = len(laiZiDictCards)
+		if laiZiSize == 0 {
+			return
+		}
 	}
 
-	// 拆炸弹
-	if cardsList, infoList := splitZhaDan(size, dictCards, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
+	// 补四软炸(三不带补)
+	for i := 0; i < len(retInfoList); i++ {
+		if retInfoList[i].CardType == CardTypeSanBuDai {
+			retInfoList[i].CardType = CardTypeRuanZhaDan4
+			retCardsList[i] = append(retCardsList[i], findCardsLaiZi(laiZiDictCards, 1)...)
 
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
+			laiZiSize = len(laiZiDictCards)
+			if laiZiSize == 0 {
+				return
+			}
+		}
 	}
 
-	// 拆四软炸
+	// 补2
+	for i := 0; i < len(retInfoList); i++ {
+		if retInfoList[i].MinValue == NumTypeTwo && retInfoList[i].CardType != CardTypeZhaDan {
+			retCardsList[i] = append(retCardsList[i], findCardsLaiZi(laiZiDictCards, 1)...)
 
-	// 拆2
-	if retCards, retInfo := splitTwo(dictCards); retInfo.CardType != CardTypeNone {
-		retCardsList = append(retCardsList, retCards)
-		retInfoList = append(retInfoList, retInfo)
+			if len(retCardsList[i]) == 2 {
+				retInfoList[i].CardType = CardTypeDui
+			}
 
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
+			if len(retCardsList[i]) == 3 {
+				retInfoList[i].CardType = CardTypeSanBuDai
+			}
+
+			if len(retCardsList[i]) == 4 {
+				retInfoList[i].CardType = CardTypeRuanZhaDan4
+			}
+
+			laiZiSize = len(laiZiDictCards)
+			if laiZiSize == 0 {
+				return
+			}
+		}
 	}
 
-	// 拆飞机
-	if cardsList, infoList := splitFeiJiBuDai(size, dictCards, count, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
+	// 补三不带
+	for i := 0; i < len(retInfoList); i++ {
+		if retInfoList[i].CardType == CardTypeDui && retInfoList[i].MinValue > 10 {
+			retInfoList[i].CardType = CardTypeSanBuDai
+			retCardsList[i] = append(retCardsList[i], findCardsLaiZi(laiZiDictCards, 1)...)
 
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
+			laiZiSize = len(laiZiDictCards)
+			if laiZiSize == 0 {
+				return
+			}
+		}
 	}
 
-	// 拆顺子
-	if cardsList, infoList := splitShunZi(size, dictCards, count); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
+	// 当做单牌用
+	retCards := findCardsLaiZi(laiZiDictCards, 1)
+	retCardsList = append(retCardsList, retCards)
 
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
-	}
-
-	// 拆连对
-	if cardsList, infoList := splitLianDui(size, dictCards, count, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
-
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
-	}
-
-	// 拆三不带
-	if cardsList, infoList := splitSanBuDai(size, dictCards, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
-
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
-	}
-
-	// 拆对
-	if cardsList, infoList := splitDui(size, dictCards, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
-
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
-	}
-
-	// 拆单
-	if cardsList, infoList := splitDan(size, dictCards, value); len(infoList) != 0 {
-		retCardsList = append(retCardsList, cardsList...)
-		retInfoList = append(retInfoList, infoList...)
-
-		size = len(dictCards)
-		count, value, _ = getCountValueLine(dictCards)
-	}
+	var retInfo CardTypeInfo
+	retInfo.CardType = CardTypeDan
+	retInfo.MinValue = int(laiZiCards[0].Num)
+	retInfoList = append(retInfoList, retInfo)
 	return
 }
 
@@ -957,9 +961,133 @@ func splitDan(size int, dictCards dictMap, value valueList) (retCardsList [][]*C
 	return
 }
 
-// 拆软连炸
-func splitRuanLianZha(size int, dictCards dictMap, count countList) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
+// 拆四软炸
+func splitRuanZhaDan(size int, laiZiSize int, dictCards dictMap, count countList, value valueList, laiZiDictCards dictMap) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
+	if size < 4 || laiZiSize == 0 {
+		return
+	}
+
+	var nums []int
+
+	// 补三张
+	for _, v := range value[3] {
+		for i := 0; i < 3; i++ {
+			nums = append(nums, v)
+		}
+
+		var retCards []*Card
+		var retInfo CardTypeInfo
+
+		retCards = findCardsByNums(dictCards, nums)                       // 非癞子牌
+		retCards = append(retCards, findCardsLaiZi(laiZiDictCards, 1)...) // 癞子牌
+		retCardsList = append(retCardsList, retCards)
+
+		retInfo.CardType = CardTypeRuanZhaDan4
+		retInfo.MinValue = nums[0]
+		retInfoList = append(retInfoList, retInfo)
+
+		count, value, _ = getCountValueLine(dictCards)
+		laiZiSize = len(laiZiDictCards)
+
+		if laiZiSize == 0 {
+			return
+		}
+	}
 	return
 }
 
-// 拆四软炸
+// 拆癞子飞机
+func splitFeiJiBuDaiLaiZi(size int, laiZiSize int, dictCards dictMap, count countList, value valueList, laiZiDictCards dictMap) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
+	if size < 6 {
+		return
+	}
+
+	if laiZiSize == 0 {
+		return splitFeiJiBuDai(size, dictCards, count, value)
+	}
+
+	for i := NumTypeThree; i <= NumTypeAce; i++ {
+		var nums []int
+		var needLaiZi int
+
+		for j := i; j <= NumTypeAce; j++ {
+			i = j
+
+			if count[j] == 3 {
+				for k := 0; k < 3; k++ {
+					nums = append(nums, j)
+				}
+				continue
+			}
+
+			if count[j] == 2 {
+				needLaiZi++
+				for k := 0; k < 2; k++ {
+					nums = append(nums, j)
+				}
+
+				if needLaiZi == laiZiSize {
+					break
+				}
+				continue
+			}
+			break
+		}
+
+		// 可以补出飞机
+		if len(nums) > 0 && nums[len(nums)-1]-nums[0]+1 >= 2 {
+			var retCards []*Card
+			var retInfo CardTypeInfo
+
+			retCards = findCardsByNums(dictCards, nums)                               // 非癞子牌
+			retCards = append(retCards, findCardsLaiZi(laiZiDictCards, needLaiZi)...) // 癞子牌
+			retCardsList = append(retCardsList, retCards)
+
+			retInfo.CardType = CardTypeFeiJiBuDai
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[len(nums)-1]
+			retInfoList = append(retInfoList, retInfo)
+
+			count, value, _ = getCountValueLine(dictCards)
+			laiZiSize = len(laiZiDictCards)
+		}
+	}
+	return
+}
+
+// 拆癞子三不带
+func splitSanBuDaiLaiZi(size int, laiZiSize int, dictCards dictMap, count countList, value valueList, laiZiDictCards dictMap) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
+	if size < 3 || laiZiSize == 0 {
+		return
+	}
+
+	var nums []int
+
+	// 补三张
+	for _, v := range value[3] {
+		for i := 0; i < 3; i++ {
+			nums = append(nums, v)
+		}
+
+		var retCards []*Card
+		var retInfo CardTypeInfo
+
+		retCards = findCardsByNums(dictCards, nums)                       // 非癞子牌
+		retCards = append(retCards, findCardsLaiZi(laiZiDictCards, 1)...) // 癞子牌
+		retCardsList = append(retCardsList, retCards)
+
+		retInfo.CardType = CardTypeRuanZhaDan4
+		retInfo.MinValue = nums[0]
+		retInfoList = append(retInfoList, retInfo)
+
+		count, value, _ = getCountValueLine(dictCards)
+		laiZiSize = len(laiZiDictCards)
+
+		if laiZiSize == 0 {
+			return
+		}
+	}
+	return
+}
+
+// 拆癞子对

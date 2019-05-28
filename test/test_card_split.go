@@ -122,7 +122,6 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)5:", cardsList, infoList)
-	fmt.Println("手数(经典模式)5:", ddz.GetMinCount(infoList))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 3),
@@ -284,7 +283,6 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)14:", cardsList, infoList)
-	fmt.Println("手数(经典模式)14:", ddz.GetMinCount(infoList))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 9),
@@ -299,7 +297,6 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)15:", cardsList, infoList)
-	fmt.Println("手数(经典模式)15:", ddz.GetMinCount(infoList))
 
 	cards = []*ddz.Card{
 		ddz.NewCard(ddz.SuitTypeHeart, 3),
@@ -320,7 +317,6 @@ func splitJingDian() {
 
 	cardsList, infoList = ddz.SplitCardsJingDian(cards)
 	fmt.Println("拆牌(经典模式)16:", cardsList, infoList)
-	fmt.Println("手数(经典模式)16:", ddz.GetMinCount(infoList))
 }
 
 func splitBuXiPai() {
