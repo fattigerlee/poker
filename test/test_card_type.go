@@ -185,6 +185,78 @@ func isFeiJiDaiYi() {
 		ddz.NewCard(ddz.SuitTypeHeart, 5),
 	}
 	fmt.Println("飞机带一:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeHeart, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+	}
+	fmt.Println("飞机带一:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 7),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeHeart, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+	}
+	fmt.Println("飞机带一:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeHeart, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+	}
+	fmt.Println("飞机带一:", ddz.GetCardType(cards))
 }
 
 func isFeiJiDaiEr() {

@@ -1,7 +1,5 @@
 package ddz
 
-import "sort"
-
 // 获取牌型
 func GetCardType(cards []*Card, laiZiNums ...NumType) (list []*CardTypeInfo) {
 	if len(laiZiNums) == 0 {
@@ -40,7 +38,7 @@ func GetCardType(cards []*Card, laiZiNums ...NumType) (list []*CardTypeInfo) {
 func analysis(cards []*Card) (list []*CardTypeInfo) {
 	size := len(cards)
 	dictCards := convertToMap(cards)
-	_, value, line := getCountValueLine(dictCards)
+	count, value, line := getCountValueLine(dictCards)
 
 	switch size {
 	case 1:
@@ -124,7 +122,7 @@ func analysis(cards []*Card) (list []*CardTypeInfo) {
 	}
 
 	// 飞机带一
-	if info := isFeiJiDaiYi(size, value, line); info.CardType != CardTypeNone {
+	if info := isFeiJiDaiYi(size, count, value, line); info.CardType != CardTypeNone {
 		list = append(list, &info)
 		return
 	}
@@ -324,7 +322,7 @@ func isFeiJiBuDai(size int, value valueList, line lineList) (info CardTypeInfo) 
 }
 
 // 飞机带一
-func isFeiJiDaiYi(size int, value valueList, line lineList) (info CardTypeInfo) {
+func isFeiJiDaiYi(size int, count countList, value valueList, line lineList) (info CardTypeInfo) {
 	if size < 8 || size%4 != 0 {
 		return
 	}
@@ -335,40 +333,25 @@ func isFeiJiDaiYi(size int, value valueList, line lineList) (info CardTypeInfo) 
 		return
 	}
 
-	// 统计所有的三张和四张
-	var normalLine []int
-	for _, v := range value[3] {
-		if isJokerAndTwo(v) {
-			continue
+	valueRange := size / 4
+
+	for i := NumTypeAce; i >= NumTypeThree+valueRange-1; i-- {
+		var nums []int
+		for j := i; j >= i-valueRange+1; j-- {
+			if count[j] >= 3 {
+				nums = append(nums, j)
+				continue
+			}
+			break
 		}
-		normalLine = append(normalLine, v)
-	}
 
-	for _, v := range value[4] {
-		if isJokerAndTwo(v) {
-			continue
+		if len(nums) == valueRange {
+			info.CardType = CardTypeFeiJiDaiYi
+			info.MinValue = nums[len(nums)-1]
+			info.MaxValue = nums[0]
+			return
 		}
-		normalLine = append(normalLine, v)
 	}
-
-	if size != len(normalLine)*4 {
-		return
-	}
-
-	// 排序
-	sort.Slice(normalLine, func(i, j int) bool {
-		return normalLine[i] < normalLine[j]
-	})
-
-	// 必须连续
-	valueRange := normalLine[len(normalLine)-1] - normalLine[0] + 1
-	if size != valueRange*4 {
-		return
-	}
-
-	info.CardType = CardTypeFeiJiDaiYi
-	info.MinValue = normalLine[0]
-	info.MaxValue = normalLine[len(normalLine)-1]
 	return
 }
 
