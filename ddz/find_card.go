@@ -1102,6 +1102,7 @@ func findZhaDan(size int, dictCards dictMap, value valueList) (retCards []*Card,
 		retCards = findCardsByNums(dictCards, nums)
 		retInfo.CardType = CardTypeZhaDan
 		retInfo.MinValue = v
+		break
 	}
 	return
 }
@@ -1126,6 +1127,7 @@ func findBigZhaDan(size int, info *CardTypeInfo, dictCards dictMap, value valueL
 		retCards = findCardsByNums(dictCards, nums)
 		retInfo.CardType = CardTypeZhaDan
 		retInfo.MinValue = v
+		break
 	}
 	return
 }

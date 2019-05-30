@@ -354,6 +354,34 @@ func findZhaDanLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
 	fmt.Println("硬炸弹:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 4),
+		ddz.NewCard(ddz.SuitTypeHeart, 4),
+		ddz.NewCard(ddz.SuitTypeDiamond, 4),
+		ddz.NewCard(ddz.SuitTypeSpade, 4),
+		ddz.NewCard(ddz.SuitTypeHeart, 6),
+		ddz.NewCard(ddz.SuitTypeDiamond, 6),
+		ddz.NewCard(ddz.SuitTypeClub, 6),
+		ddz.NewCard(ddz.SuitTypeSpade, 6),
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 15),
+		ddz.NewCard(ddz.SuitTypeDiamond, 15),
+		ddz.NewCard(ddz.SuitTypeClub, 15),
+		ddz.NewCard(ddz.SuitTypeSpade, 15),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeSiDaiDui,
+		MinValue: 12,
+		MaxValue: 0,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("硬炸弹:", retCards, retInfo)
 }
 
 // 四软炸
