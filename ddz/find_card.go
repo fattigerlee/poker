@@ -1806,9 +1806,6 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 		return
 	}
 
-	var nums []int
-	var line []int
-
 	// 补一个癞子
 	if laiZiSize < 1 {
 		return
@@ -1816,11 +1813,11 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi++
 			case 1, 2, 3:
 				nums = append(nums, j)
@@ -1831,16 +1828,14 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 			}
 		}
 
-		if needLaiZi == 1 {
+		if len(nums)+1 == valueRange {
 			retCards = findCardsByNums(normalDictCards, nums)
 			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeShunZi
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	// 补两个癞子
@@ -1850,11 +1845,11 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi++
 			case 1, 2, 3:
 				nums = append(nums, j)
@@ -1865,16 +1860,14 @@ func findBigShunZiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictC
 			}
 		}
 
-		if needLaiZi == 2 {
+		if len(nums)+2 == valueRange {
 			retCards = findCardsByNums(normalDictCards, nums)
-			retCards = append(retCards, laiZiCards[0:2]...)
+			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeShunZi
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 	return
 }
@@ -1891,9 +1884,6 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 		return
 	}
 
-	var nums []int
-	var line []int
-
 	// 补一个癞子
 	if laiZiSize < 1 {
 		return
@@ -1901,19 +1891,16 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 2
 			case 1:
-				nums = append(nums, j)
 				needLaiZi++
 			case 2, 3:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 1 {
@@ -1921,16 +1908,14 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 			}
 		}
 
-		if needLaiZi == 1 {
+		if len(nums)+1 == valueRange*2 {
 			retCards = findCardsByNums(normalDictCards, nums)
 			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeLianDui
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	// 补两个癞子
@@ -1940,19 +1925,16 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 2
 			case 1:
-				nums = append(nums, j)
 				needLaiZi++
 			case 2, 3:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 2 {
@@ -1960,16 +1942,14 @@ func findBigLianDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDict
 			}
 		}
 
-		if needLaiZi == 2 {
+		if len(nums)+2 == valueRange*2 {
 			retCards = findCardsByNums(normalDictCards, nums)
-			retCards = append(retCards, laiZiCards[0:2]...)
+			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeLianDui
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 	return
 }
@@ -1986,9 +1966,6 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 		return
 	}
 
-	var nums []int
-	var line []int
-
 	// 补一个癞子
 	if laiZiSize < 1 {
 		return
@@ -1996,24 +1973,18 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 1 {
@@ -2021,16 +1992,14 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 			}
 		}
 
-		if needLaiZi == 1 {
+		if len(nums)+1 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
 			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiBuDai
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	// 补两个癞子
@@ -2040,24 +2009,18 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 2 {
@@ -2065,16 +2028,14 @@ func findBigFeiJiBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalD
 			}
 		}
 
-		if needLaiZi == 2 {
+		if len(nums)+2 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
-			retCards = append(retCards, laiZiCards[0:2]...)
+			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiBuDai
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
 			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 	return
 }
@@ -2091,9 +2052,6 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		return
 	}
 
-	var nums []int
-	var line []int
-
 	// 补一个癞子
 	if laiZiSize < 1 {
 		return
@@ -2101,24 +2059,18 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 1 {
@@ -2126,16 +2078,14 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			}
 		}
 
-		if needLaiZi == 1 {
+		if len(nums)+1 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
 			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiDaiYi
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
-			break
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
+			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	if retInfo.CardType != CardTypeNone {
@@ -2165,24 +2115,18 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 2 {
@@ -2190,16 +2134,14 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			}
 		}
 
-		if needLaiZi == 2 {
+		if len(nums)+2 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
-			retCards = append(retCards, laiZiCards[0:2]...)
+			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiDaiYi
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
-			break
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
+			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	if retInfo.CardType != CardTypeNone {
@@ -2236,9 +2178,6 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		return
 	}
 
-	var nums []int
-	var line []int
-
 	// 补一个癞子
 	if laiZiSize < 1 {
 		return
@@ -2246,24 +2185,18 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 1 {
@@ -2271,16 +2204,14 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			}
 		}
 
-		if needLaiZi == 1 {
+		if len(nums)+1 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
 			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiDaiEr
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
-			break
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
+			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	if retInfo.CardType != CardTypeNone {
@@ -2310,24 +2241,18 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 
 	for i := info.MinValue + 1; i <= NumTypeAce-valueRange+1; i++ {
 		var needLaiZi int
-		for j := i; j < i+valueRange; j++ {
-			line = append(line, j)
+		var nums []int
 
+		for j := i; j < i+valueRange; j++ {
 			switch normalCount[j] {
-			case 0:
+			case 0, 4:
 				needLaiZi += 3
 			case 1:
-				nums = append(nums, j)
 				needLaiZi += 2
 			case 2:
-				for k := 0; k < 2; k++ {
-					nums = append(nums, j)
-				}
 				needLaiZi++
 			case 3:
-				for k := 0; k < 3; k++ {
-					nums = append(nums, j)
-				}
+				nums = append(nums, j)
 			}
 
 			if needLaiZi > 2 {
@@ -2335,16 +2260,14 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 			}
 		}
 
-		if needLaiZi == 2 {
+		if len(nums)+2 == valueRange*3 {
 			retCards = findCardsByNums(normalDictCards, nums)
-			retCards = append(retCards, laiZiCards[0:2]...)
+			retCards = append(retCards, laiZiCards[0])
 			retInfo.CardType = CardTypeFeiJiDaiEr
-			retInfo.MinValue = line[0]
-			retInfo.MaxValue = line[0] + valueRange - 1
-			break
+			retInfo.MinValue = nums[0]
+			retInfo.MaxValue = nums[0] + valueRange - 1
+			return
 		}
-		nums = nums[0:0]
-		line = line[0:0]
 	}
 
 	if retInfo.CardType != CardTypeNone {
