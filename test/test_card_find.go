@@ -106,6 +106,19 @@ func findDui() {
 	}
 	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
 	fmt.Println("对:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeDui,
+		MinValue: 3,
+	}
+	retCards, retInfo = ddz.FindCardsJingDian(info, cards)
+	fmt.Println("对:", retCards, retInfo)
 }
 
 func findSanBuDai() {
@@ -589,6 +602,29 @@ func findLianZha() {
 		CardType: ddz.CardTypeLianZha,
 		MinValue: 13,
 		MaxValue: 14,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPai(info, cards)
+	fmt.Println("连炸:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 15),
+		ddz.NewCard(ddz.SuitTypeSpade, 15),
+		ddz.NewCard(ddz.SuitTypeClub, 15),
+		ddz.NewCard(ddz.SuitTypeDiamond, 15),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeHuoJian,
+		MinValue: 0,
+		MaxValue: 0,
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPai(info, cards)
 	fmt.Println("连炸:", retCards, retInfo)

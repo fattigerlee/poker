@@ -1158,7 +1158,7 @@ func findLianZha(size int, dictCards dictMap, count countList, value valueList, 
 
 	for _, v := range value[4] {
 		for i := v; i < v+valueRange; i++ {
-			if v > NumTypeAce {
+			if i > NumTypeAce {
 				break
 			}
 
