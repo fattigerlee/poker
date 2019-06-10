@@ -378,4 +378,30 @@ func splitBuXiPaiLaiZi() {
 
 	cardsList, infoList = ddz.SplitCardsBuXiPaiLaiZi(cards, laiZiNums)
 	fmt.Println("拆牌(不洗牌癞子模式):", cardsList, infoList)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 5),
+		ddz.NewCard(ddz.SuitTypeDiamond, 5),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	cardsList, infoList = ddz.SplitCardsBuXiPaiLaiZi(cards, laiZiNums)
+	fmt.Println("拆牌2(不洗牌癞子模式):", cardsList, infoList)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 5),
+		ddz.NewCard(ddz.SuitTypeDiamond, 5),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	cardsList, infoList = ddz.SplitCardsBuXiPaiLaiZi(cards, laiZiNums)
+	fmt.Println("拆牌3(不洗牌癞子模式):", cardsList, infoList)
 }

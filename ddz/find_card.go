@@ -276,6 +276,11 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumTyp
 			return
 		}
 
+		// 五软炸
+		if retCards, retInfo = findRuanZhaDan5(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+			return
+		}
+
 		// 硬连炸
 		if retCards, retInfo = findLianZha(size, normalDictCards, normalCount, normalValue, 2); retInfo.CardType != CardTypeNone {
 			return

@@ -19,6 +19,7 @@ func main() {
 
 	findZhaDanLaiZi(laiZiNums)
 	findRuanZhaDan4(laiZiNums)
+	findRuanZhaDan5(laiZiNums)
 	findLaiZiZhaDan4(laiZiNums)
 	findChunLaiZiZhaDan(laiZiNums)
 
@@ -438,6 +439,30 @@ func findRuanZhaDan4(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("四软炸:", retCards, retInfo)
+}
+
+// 五软炸
+func findRuanZhaDan5(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 6),
+		ddz.NewCard(ddz.SuitTypeSpade, 6),
+		ddz.NewCard(ddz.SuitTypeClub, 6),
+		ddz.NewCard(ddz.SuitTypeDiamond, 6),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeZhaDan,
+		MinValue: 10,
+		MaxValue: 0,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("五软炸:", retCards, retInfo)
 }
 
 // 四癞子炸
