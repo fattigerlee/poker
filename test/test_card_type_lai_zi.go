@@ -282,6 +282,16 @@ func isSiDaiDuiLaiZi(laiZiNums []ddz.NumType) {
 		ddz.NewCard(ddz.SuitTypeSpade, 10),
 	}
 	fmt.Println("四带对:", ddz.GetCardType(cards, laiZiNums...))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeDiamond, 5),
+		ddz.NewCard(ddz.SuitTypeClub, 7),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+	}
+	fmt.Println("四带对:", ddz.GetCardType(cards, laiZiNums...))
 }
 
 func isShunZiLaiZi(laiZiNums []ddz.NumType) {
