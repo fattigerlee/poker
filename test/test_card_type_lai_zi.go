@@ -687,4 +687,16 @@ func isRuanLianZhaDan(laiZiNums []ddz.NumType) {
 		ddz.NewCard(ddz.SuitTypeJoker, 17),
 	}
 	fmt.Println("软连炸:", ddz.GetCardType(cards, laiZiNums...))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 15),
+		ddz.NewCard(ddz.SuitTypeSpade, 15),
+		ddz.NewCard(ddz.SuitTypeHeart, 15),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+	}
+	fmt.Println("软连炸:", ddz.GetCardType(cards, laiZiNums...))
 }

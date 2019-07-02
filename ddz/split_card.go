@@ -237,20 +237,17 @@ func SplitCardsBuXiPaiLaiZi(cards []*Card, laiZiNums []NumType) (retCardsList []
 		}
 	}
 
-	var index int
-	var max int
-
 	// 补四软炸(三不带补)
-	index = 0
-	max = 0
+	index := -1
+	max := 0
 	for i := 0; i < len(retInfoList); i++ {
 		if retInfoList[i].CardType == CardTypeSanBuDai && max < retInfoList[i].MinValue {
 			index = i
-			max = retInfoList[i].MaxValue
+			max = retInfoList[i].MinValue
 		}
 	}
 
-	if index != 0 {
+	if index >= 0 {
 		retInfoList[index].CardType = CardTypeRuanZhaDan4
 		retCardsList[index] = append(retCardsList[index], findCardsLaiZi(laiZiDictCards, 1)...)
 
@@ -261,16 +258,16 @@ func SplitCardsBuXiPaiLaiZi(cards []*Card, laiZiNums []NumType) (retCardsList []
 	}
 
 	// 补三不带
-	index = 0
+	index = -1
 	max = 0
 	for i := 0; i < len(retInfoList); i++ {
 		if retInfoList[i].CardType == CardTypeDui && max < retInfoList[i].MinValue {
 			index = i
-			max = retInfoList[i].MaxValue
+			max = retInfoList[i].MinValue
 		}
 	}
 
-	if index != 0 {
+	if index >= 0 {
 		retInfoList[index].CardType = CardTypeSanBuDai
 		retCardsList[index] = append(retCardsList[index], findCardsLaiZi(laiZiDictCards, 1)...)
 
@@ -281,16 +278,16 @@ func SplitCardsBuXiPaiLaiZi(cards []*Card, laiZiNums []NumType) (retCardsList []
 	}
 
 	// 补五软炸
-	index = 0
+	index = -1
 	max = 0
 	for i := 0; i < len(retInfoList); i++ {
 		if retInfoList[i].CardType == CardTypeZhaDan && max < retInfoList[i].MinValue {
 			index = i
-			max = retInfoList[i].MaxValue
+			max = retInfoList[i].MinValue
 		}
 	}
 
-	if index != 0 {
+	if index >= 0 {
 		retInfoList[index].CardType = CardTypeRuanZhaDan5
 		retCardsList[index] = append(retCardsList[index], findCardsLaiZi(laiZiDictCards, 1)...)
 
