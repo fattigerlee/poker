@@ -17,6 +17,9 @@ func main() {
 
 	findShunZiLaiZi(laiZiNums)
 
+	findSiDaiDanLaiZi(laiZiNums)
+	findSiDaiDuiLaiZi(laiZiNums)
+
 	findZhaDanLaiZi(laiZiNums)
 	findRuanZhaDan4(laiZiNums)
 	findRuanZhaDan5(laiZiNums)
@@ -360,6 +363,66 @@ func findShunZiLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
 	fmt.Println("顺子:", retCards, retInfo)
+}
+
+// 四带单
+func findSiDaiDanLaiZi(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeDiamond, 13),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeSiDaiDan,
+		MinValue: 10,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("四带单:", retCards, retInfo)
+}
+
+// 四带对
+func findSiDaiDuiLaiZi(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeDiamond, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
+		ddz.NewCard(ddz.SuitTypeDiamond, 5),
+		ddz.NewCard(ddz.SuitTypeDiamond, 12),
+		ddz.NewCard(ddz.SuitTypeDiamond, 13),
+		ddz.NewCard(ddz.SuitTypeHeart, 13),
+		ddz.NewCard(ddz.SuitTypeSpade, 13),
+		ddz.NewCard(ddz.SuitTypeClub, 13),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 15),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeSiDaiDui,
+		MinValue: 10,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("四带对:", retCards, retInfo)
 }
 
 // 硬炸弹

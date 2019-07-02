@@ -37,7 +37,7 @@ func GetCardType(cards []*Card, laiZiNums ...NumType) (list []*CardTypeInfo) {
 // 无癞子算法
 func analysis(cards []*Card) (list []*CardTypeInfo) {
 	size := len(cards)
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 	count, value, line := getCountValueLine(dictCards)
 
 	switch size {
@@ -445,10 +445,10 @@ func analysisLaiZi(cards []*Card, normalCards []*Card, laiZiCards []*Card) (list
 	size := len(cards)
 	laiZiSize := len(laiZiCards)
 
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 	_, value, _ := getCountValueLine(dictCards)
 
-	normalDictCards := convertToMap(normalCards)
+	normalDictCards := convertToMap(normalCards, nil)
 	normalCount, normalValue, normalLine := getCountValueLine(normalDictCards)
 
 	// 癞子单
@@ -1506,7 +1506,7 @@ func isChunLaiZiZhaDan(size int, laiZiSize int, laiZiCards []*Card) (info CardTy
 		return
 	}
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, _, laiZiLine := getCountValueLine(laiZiDictCards)
 
 	if len(laiZiLine) == 1 {
@@ -1524,7 +1524,7 @@ func isLaiZiZhaDan(size int, laiZiSize int, laiZiCards []*Card) (info CardTypeIn
 
 	switch size {
 	case 4:
-		laiZiDictCards := convertToMap(laiZiCards)
+		laiZiDictCards := convertToMap(laiZiCards, nil)
 		_, _, laiZiLine := getCountValueLine(laiZiDictCards)
 
 		if len(laiZiLine) != 1 {

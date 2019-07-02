@@ -5,7 +5,7 @@ package ddz
 // 找牌(经典模式)
 func FindCardsJingDian(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	size := len(cards)
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 	count, value, _ := getCountValueLine(dictCards)
 
 	switch info.CardType {
@@ -82,7 +82,7 @@ func FindCardsJingDian(info *CardTypeInfo, cards []*Card) (retCards []*Card, ret
 // 找牌(不洗牌模式)
 func FindCardsBuXiPai(info *CardTypeInfo, cards []*Card) (retCards []*Card, retInfo CardTypeInfo) {
 	size := len(cards)
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 	count, value, _ := getCountValueLine(dictCards)
 
 	switch info.CardType {
@@ -194,7 +194,7 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumTyp
 	size := len(cards)           // 手牌数量
 	laiZiSize := len(laiZiCards) // 癞子牌数量
 
-	normalDictCards := convertToMap(normalCards)
+	normalDictCards := convertToMap(normalCards, nil)
 	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
 
 	switch info.CardType {
@@ -270,7 +270,7 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumTyp
 		}
 
 		// 火箭癞子
-		laiZiDictCards := convertToMap(laiZiCards)
+		laiZiDictCards := convertToMap(laiZiCards, nil)
 		_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 		if retCards, retInfo = findHuoJian(size, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
 			return
@@ -344,7 +344,7 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumTyp
 		}
 
 		// 火箭癞子
-		laiZiDictCards := convertToMap(laiZiCards)
+		laiZiDictCards := convertToMap(laiZiCards, nil)
 		_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 		if retCards, retInfo = findHuoJian(size, laiZiDictCards, laiZiValue); retInfo.CardType != CardTypeNone {
 			return
@@ -382,7 +382,7 @@ func FindCardsTianDiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums ...NumTyp
 		return FindCardsJingDian(info, cards)
 	}
 
-	normalDictCards := convertToMap(normalCards)
+	normalDictCards := convertToMap(normalCards, nil)
 	normalCount, normalValue, _ := getCountValueLine(normalDictCards)
 
 	switch info.CardType {
@@ -758,7 +758,7 @@ func findBigSanDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards dict
 	if len(retCards) != 4 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -796,7 +796,7 @@ func findBigSanDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards dict
 	if len(retCards) != 5 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -841,7 +841,7 @@ func findBigSiDaiDan(size int, info *CardTypeInfo, cards []*Card, dictCards dict
 	if len(retCards) != 6 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -886,7 +886,7 @@ func findBigSiDaiDui(size int, info *CardTypeInfo, cards []*Card, dictCards dict
 	if len(retCards) != 8 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -1032,7 +1032,7 @@ func findBigFeiJiDaiYi(size int, info *CardTypeInfo, cards []*Card, dictCards di
 	if len(retCards) != valueRange*4 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -1085,7 +1085,7 @@ func findBigFeiJiDaiEr(size int, info *CardTypeInfo, cards []*Card, dictCards di
 	if len(retCards) != valueRange*5 {
 		retCards = retCards[0:0]
 		retInfo.Reset()
-		dictCards = convertToMap(cards)
+		dictCards = convertToMap(cards, dictCards)
 		_, value, _ = getCountValueLine(dictCards)
 	}
 	return
@@ -1261,7 +1261,7 @@ func findBigDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCard
 
 	var nums []int
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	// 手上有火箭
@@ -1363,7 +1363,7 @@ func findBigDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDictCard
 		return
 	}
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	for _, v := range laiZiValue[2] {
@@ -1450,7 +1450,7 @@ func findBigSanBuDaiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalDic
 		return
 	}
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	for _, v := range laiZiValue[3] {
@@ -1506,7 +1506,7 @@ func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 4 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1535,7 +1535,7 @@ func findBigSanDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 4 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1581,7 +1581,7 @@ func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 5 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1610,7 +1610,7 @@ func findBigSanDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 5 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1663,7 +1663,7 @@ func findBigSiDaiDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 6 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1701,7 +1701,7 @@ func findBigSiDaiDanLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 6 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1754,7 +1754,7 @@ func findBigSiDaiDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 8 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -1792,7 +1792,7 @@ func findBigSiDaiDuiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalCar
 		if len(retCards) != 8 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -2108,7 +2108,7 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		if len(retCards) != valueRange*4 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -2164,7 +2164,7 @@ func findBigFeiJiDaiYiLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		if len(retCards) != valueRange*4 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -2234,7 +2234,7 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		if len(retCards) != valueRange*5 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -2290,7 +2290,7 @@ func findBigFeiJiDaiErLaiZi(size int, laiZiSize int, info *CardTypeInfo, normalC
 		if len(retCards) != valueRange*5 {
 			retCards = retCards[0:0]
 			retInfo.Reset()
-			normalDictCards = convertToMap(normalCards)
+			normalDictCards = convertToMap(normalCards, normalDictCards)
 			_, normalValue, _ = getCountValueLine(normalDictCards)
 		}
 	}
@@ -2987,7 +2987,7 @@ func findLaiZiZhaDan4(laiZiSize int, laiZiCards []*Card) (retCards []*Card, retI
 
 	var nums []int
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	// 优先四纯癞子炸
@@ -3015,7 +3015,7 @@ func findBigChunLaiZiZhaDan(laiZiSize int, info *CardTypeInfo, laiZiCards []*Car
 
 	var nums []int
 
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	for _, v := range laiZiValue[4] {

@@ -25,12 +25,15 @@ type valueList [5][]int     // 单张,对子,三张,四张牌的牌值
 type lineList []int         // 所有牌的唯一牌值
 
 // 切片转map
-func convertToMap(cards []*Card) (dictCards dictMap) {
-	dictCards = map[*Card]bool{}
+func convertToMap(cards []*Card, dictCards map[*Card]bool) map[*Card]bool {
+	if dictCards == nil {
+		dictCards = map[*Card]bool{}
+	}
+
 	for _, c := range cards {
 		dictCards[c] = true
 	}
-	return
+	return dictCards
 }
 
 // count 每张牌数量

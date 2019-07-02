@@ -2,7 +2,7 @@ package ddz
 
 // 底牌牌型判定
 func GetBottomCardType(cards []*Card) BottomCardType {
-	myCards := convertToMap(cards)
+	myCards := convertToMap(cards, nil)
 	_, value, line := getCountValueLine(myCards)
 
 	if huoJian(value) {

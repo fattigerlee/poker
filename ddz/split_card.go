@@ -6,7 +6,7 @@ import (
 
 // 拆牌(经典模式)
 func SplitCardsJingDian(cards []*Card) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 
 	size := len(dictCards)
 	count, value, _ := getCountValueLine(dictCards)
@@ -96,7 +96,7 @@ func SplitCardsJingDian(cards []*Card) (retCardsList [][]*Card, retInfoList []Ca
 
 // 拆牌(不洗牌)
 func SplitCardsBuXiPai(cards []*Card) (retCardsList [][]*Card, retInfoList []CardTypeInfo) {
-	dictCards := convertToMap(cards)
+	dictCards := convertToMap(cards, nil)
 
 	size := len(dictCards)
 	count, value, _ := getCountValueLine(dictCards)
@@ -220,7 +220,7 @@ func SplitCardsBuXiPaiLaiZi(cards []*Card, laiZiNums []NumType) (retCardsList []
 	}
 
 	// 癞子牌
-	laiZiDictCards := convertToMap(laiZiCards)
+	laiZiDictCards := convertToMap(laiZiCards, nil)
 	_, laiZiValue, _ := getCountValueLine(laiZiDictCards)
 
 	// 非癞子牌拆牌
