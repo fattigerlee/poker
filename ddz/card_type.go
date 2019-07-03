@@ -227,6 +227,13 @@ func isSiDaiDui(size int, value valueList) (info CardTypeInfo) {
 	if len(value[4]) == 1 && len(value[2]) == 2 {
 		info.CardType = CardTypeSiDaiDui
 		info.MinValue = value[4][0]
+		return
+	}
+
+	if len(value[4]) == 2 && value[4][1]-value[4][0] != 1 {
+		info.CardType = CardTypeSiDaiDui
+		info.MinValue = value[4][1]
+		return
 	}
 	return
 }

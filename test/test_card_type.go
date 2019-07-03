@@ -123,6 +123,16 @@ func isSiDaiDan() {
 		ddz.NewCard(ddz.SuitTypeSpade, 6),
 	}
 	fmt.Println("四带单:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeClub, 3),
+		ddz.NewCard(ddz.SuitTypeSpade, 3),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+	fmt.Println("四带单:", ddz.GetCardType(cards))
 }
 
 func isSiDaiDui() {
@@ -137,6 +147,18 @@ func isSiDaiDui() {
 		ddz.NewCard(ddz.SuitTypeHeart, 5),
 		ddz.NewCard(ddz.SuitTypeSpade, 7),
 		ddz.NewCard(ddz.SuitTypeHeart, 7),
+	}
+	fmt.Println("四带对:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 4),
+		ddz.NewCard(ddz.SuitTypeSpade, 4),
+		ddz.NewCard(ddz.SuitTypeClub, 4),
+		ddz.NewCard(ddz.SuitTypeDiamond, 4),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
 	}
 	fmt.Println("四带对:", ddz.GetCardType(cards))
 }
