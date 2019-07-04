@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	laiZiNums := []ddz.NumType{9, 10}
+	laiZiNums := []ddz.NumType{16, 17}
 
 	isDanLaiZi(laiZiNums)
 	isDuiLaiZi(laiZiNums)
@@ -657,6 +657,15 @@ func isRuanZhaDan5(laiZiNums []ddz.NumType) {
 		ddz.NewCard(ddz.SuitTypeSpade, 9),
 		ddz.NewCard(ddz.SuitTypeClub, 9),
 		ddz.NewCard(ddz.SuitTypeClub, 8),
+	}
+	fmt.Println("五软炸:", ddz.GetCardType(cards, laiZiNums...))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeDiamond, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
 	}
 	fmt.Println("五软炸:", ddz.GetCardType(cards, laiZiNums...))
 }

@@ -29,6 +29,8 @@ func main() {
 	findHuoJianLaiZi(laiZiNums)
 	findRuanLianZha(laiZiNums)
 	findLianZhaLaiZi(laiZiNums)
+
+	findRuanZhaDan6(laiZiNums)
 }
 
 // 单张
@@ -768,4 +770,29 @@ func findLianZhaLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
 	fmt.Println("硬连炸:", retCards, retInfo)
+}
+
+// 六软炸
+func findRuanZhaDan6(laiZiNums []ddz.NumType) {
+	var cards []*ddz.Card
+	var info *ddz.CardTypeInfo
+	var retCards []*ddz.Card
+	var retInfo ddz.CardTypeInfo
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 7),
+		ddz.NewCard(ddz.SuitTypeSpade, 7),
+		ddz.NewCard(ddz.SuitTypeHeart, 7),
+		ddz.NewCard(ddz.SuitTypeDiamond, 7),
+		ddz.NewCard(ddz.SuitTypeJoker, 16),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeLianZha,
+		MinValue: 8,
+		MaxValue: 9,
+	}
+	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
+	fmt.Println("六软炸:", retCards, retInfo)
 }

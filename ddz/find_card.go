@@ -320,6 +320,14 @@ func FindCardsBuXiPaiLaiZi(info *CardTypeInfo, cards []*Card, laiZiNums []NumTyp
 		}
 
 	case CardTypeRuanLianZha, CardTypeLianZha:
+		// 二连炸
+		if info.MaxValue-info.MinValue+1 == 2 {
+			// 六软炸
+			if retCards, retInfo = findRuanZhaDan6(size, laiZiSize, normalDictCards, normalValue, laiZiCards); retInfo.CardType != CardTypeNone {
+				return
+			}
+		}
+
 		// 更大的硬连炸
 		if retCards, retInfo = findBigLianZha(size, info, normalDictCards, normalCount); retInfo.CardType != CardTypeNone {
 			return
