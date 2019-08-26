@@ -97,7 +97,7 @@ func analysis(cards []*Card) (list []*CardTypeInfo) {
 
 	case 8:
 		// 四带对
-		if info := isSiDaiDui(size, value); info.CardType != CardTypeNone {
+		if info := isSiDaiDui(size, value, line); info.CardType != CardTypeNone {
 			list = append(list, &info)
 			return
 		}
@@ -219,8 +219,13 @@ func isSiDaiDan(size int, value valueList) (info CardTypeInfo) {
 }
 
 // 四带对(炸弹带两对)
-func isSiDaiDui(size int, value valueList) (info CardTypeInfo) {
+func isSiDaiDui(size int, value valueList, line lineList) (info CardTypeInfo) {
 	if size != 8 {
+		return
+	}
+
+	// 是否二连炸
+	if info = isLianZha(size, value, line); info.CardType != CardTypeNone {
 		return
 	}
 
@@ -230,7 +235,7 @@ func isSiDaiDui(size int, value valueList) (info CardTypeInfo) {
 		return
 	}
 
-	if len(value[4]) == 2 && value[4][1]-value[4][0] != 1 {
+	if len(value[4]) == 2 {
 		info.CardType = CardTypeSiDaiDui
 		info.MinValue = value[4][1]
 		return
@@ -368,8 +373,8 @@ func isFeiJiDaiEr(size int, value valueList, line []int) (info CardTypeInfo) {
 		return
 	}
 
-	// 不能有单张和四张
-	if len(value[1]) != 0 || len(value[4]) != 0 {
+	// 不能有单张
+	if len(value[1]) != 0 {
 		return
 	}
 

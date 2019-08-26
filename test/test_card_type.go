@@ -161,6 +161,18 @@ func isSiDaiDui() {
 		ddz.NewCard(ddz.SuitTypeClub, 14),
 	}
 	fmt.Println("四带对:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 14),
+		ddz.NewCard(ddz.SuitTypeClub, 14),
+		ddz.NewCard(ddz.SuitTypeDiamond, 14),
+		ddz.NewCard(ddz.SuitTypeSpade, 15),
+		ddz.NewCard(ddz.SuitTypeHeart, 15),
+		ddz.NewCard(ddz.SuitTypeDiamond, 15),
+		ddz.NewCard(ddz.SuitTypeClub, 15),
+	}
+	fmt.Println("四带对:", ddz.GetCardType(cards))
 }
 
 func isShunZi() {
@@ -295,6 +307,44 @@ func isFeiJiDaiEr() {
 		ddz.NewCard(ddz.SuitTypeHeart, 5),
 		ddz.NewCard(ddz.SuitTypeClub, 6),
 		ddz.NewCard(ddz.SuitTypeSpade, 6),
+	}
+	fmt.Println("飞机带二:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+	}
+	fmt.Println("飞机带二:", ddz.GetCardType(cards))
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeHeart, 5),
+		ddz.NewCard(ddz.SuitTypeSpade, 5),
+		ddz.NewCard(ddz.SuitTypeClub, 6),
+		ddz.NewCard(ddz.SuitTypeHeart, 6),
+		ddz.NewCard(ddz.SuitTypeSpade, 6),
+		ddz.NewCard(ddz.SuitTypeClub, 6),
+		ddz.NewCard(ddz.SuitTypeSpade, 9),
+		ddz.NewCard(ddz.SuitTypeHeart, 9),
+		ddz.NewCard(ddz.SuitTypeClub, 9),
+		ddz.NewCard(ddz.SuitTypeSpade, 10),
+		ddz.NewCard(ddz.SuitTypeHeart, 10),
+		ddz.NewCard(ddz.SuitTypeClub, 10),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeHeart, 11),
+		ddz.NewCard(ddz.SuitTypeClub, 11),
+		ddz.NewCard(ddz.SuitTypeSpade, 12),
+		ddz.NewCard(ddz.SuitTypeHeart, 12),
+		ddz.NewCard(ddz.SuitTypeClub, 12),
+		ddz.NewCard(ddz.SuitTypeHeart, 15),
+		ddz.NewCard(ddz.SuitTypeClub, 15),
 	}
 	fmt.Println("飞机带二:", ddz.GetCardType(cards))
 }

@@ -130,6 +130,20 @@ func findDuiLaiZi(laiZiNums []ddz.NumType) {
 	}
 	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
 	fmt.Println("对子:", retCards, retInfo)
+
+	cards = []*ddz.Card{
+		ddz.NewCard(ddz.SuitTypeClub, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 8),
+		ddz.NewCard(ddz.SuitTypeSpade, 11),
+		ddz.NewCard(ddz.SuitTypeJoker, 17),
+	}
+
+	info = &ddz.CardTypeInfo{
+		CardType: ddz.CardTypeDui,
+		MinValue: 8,
+	}
+	retCards, retInfo = ddz.FindCardsTianDiLaiZi(info, cards, laiZiNums...)
+	fmt.Println("对子:", retCards, retInfo)
 }
 
 // 三不带
@@ -388,7 +402,7 @@ func findSiDaiDanLaiZi(laiZiNums []ddz.NumType) {
 
 	info = &ddz.CardTypeInfo{
 		CardType: ddz.CardTypeSiDaiDan,
-		MinValue: 10,
+		MinValue: 15,
 	}
 	retCards, retInfo = ddz.FindCardsBuXiPaiLaiZi(info, cards, laiZiNums)
 	fmt.Println("四带单:", retCards, retInfo)
